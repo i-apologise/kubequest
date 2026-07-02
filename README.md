@@ -1,58 +1,34 @@
 # KubeQuest
 
-Learn Kubernetes by typing **real kubectl commands** against a real cluster, with a **live UI** that mirrors cluster state plus OpenTelemetry **traces and metrics**.
+Learn Kubernetes by typing **real kubectl commands** on a real cluster, with a live UI for cluster state, OpenTelemetry traces, and metrics.
 
-## Quick start (Codespaces — recommended)
+## Play in the browser (no local install)
 
-1. Open https://github.com/i-apologise/kubequest → **Code → Codespaces**
-2. Wait for devcontainer + kind + image build
-3. Run:
+### 1. Dashboard on GitHub Pages
+**https://i-apologise.github.io/kubequest/**
 
-```bash
-npm start
-```
+Pages hosts the UI preview + instructions. It cannot run Kubernetes itself (static hosting only).
 
-- Terminal: type `kubectl` (game prompt)
-- Browser: open forwarded port **3847** for the live dashboard
+### 2. Real game in Codespaces (one click)
+[![Open in GitHub Codespaces](https://img.shields.io/badge/Codespaces-Play%20KubeQuest-blue?logo=github)](https://codespaces.new/i-apologise/kubequest?quickstart=1)
 
-## Quick start (local)
+1. Click **Play in Codespaces** on the Pages site (or the badge above)
+2. Wait for devcontainer bootstrap (kind + telemetry image)
+3. In the Codespace terminal: `npm start`
+4. Open forwarded port **3847** for the *live* UI wired to your cluster
+5. Type `kubectl` in the game prompt; watch pods/traces/metrics update
 
-```bash
-npm run setup          # kind cluster + telemetry image
-npm run install:all
-npm run build:ui
-npm start              # game + dashboard
-```
+Suspend the codespace when idle to save free core-hours.
 
-## What you get
-
-| Surface | Purpose |
-|---|---|
-| `npm run game` | Terminal missions — you type kubectl |
-| `npm run dashboard` | Live UI on `:3847` — cluster map, traces, metrics |
-| `npm start` | Both together |
-| `npm run audit` | Automated missions 1–12 on a real cluster |
-
-### Live UI tabs
-- **Cluster** — SSE-updated pods/deployments/services as commands change reality
-- **Traces** — Jaeger query API (`telemetry-api` spans)
-- **Metrics** — Prometheus `kq_http_requests_total` + rate chart
-- **Missions** — goal status for all levels
-
-Game extras: `traffic` (generate in-cluster load), `ui` (print dashboard URL), `check`, `hint`, `goal`.
-
-## Mission tracks
-
-**Core (1–8):** Pod, Deployment, Scale, Service, ConfigMap, Rollout, Probes, Resources
-
-**Telemetry (9–12):**
-9. Deploy Jaeger + OTel Collector + Prometheus  
-10. Deploy instrumented `telemetry-api` (OTLP to collector)  
-11. Generate traffic; verify **live traces** in Jaeger  
-12. Verify **live metrics** in Prometheus  
-
-Sample app: `telemetry-app/` (OpenTelemetry Node SDK). Manifests: `manifests/telemetry/`.
+## Missions
+- **Core 1–8:** Pod, Deployment, Scale, Service, ConfigMap, Rollout, Probes, Resources
+- **Telemetry 9–12:** Jaeger + OTel Collector + Prometheus, instrumented app, live traces & metrics
 
 ## CI
+- `e2e` — kind cluster, all 12 missions
+- `pages` — deploys the dashboard to GitHub Pages
 
-GitHub Actions boots kind, builds the telemetry image, builds the UI, runs `npm run audit`.
+## Local (optional)
+```bash
+npm run install:all && npm run build:ui && npm run setup && npm start
+```

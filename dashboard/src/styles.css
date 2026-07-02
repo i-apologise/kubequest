@@ -87,3 +87,16 @@ th { color: var(--muted); font-weight: 600; font-size: .68rem; text-transform: u
   .main { grid-template-columns: 1fr; }
   .side { border-right: none; border-bottom: 1px solid var(--border); max-height: 200px; }
 }
+.banner {
+  display: flex; justify-content: space-between; gap: 1rem; align-items: center; flex-wrap: wrap;
+  padding: .85rem 1.2rem; background: linear-gradient(90deg, #0f766eaa, #4338caaa);
+  border-bottom: 1px solid #2dd4bf55;
+}
+.banner-sub { font-size: .82rem; opacity: .95; margin-top: .2rem; max-width: 60rem; }
+.banner-actions { display: flex; gap: .5rem; flex-wrap: wrap; }
+.banner .btn, .side .btn { text-decoration: none; }
+.play-panel { max-width: 40rem; line-height: 1.5; }
+.play-panel h2 { margin-top: 0; }
+.play-panel ol { padding-left: 1.2rem; }
+.play-panel code { background: #1a2336; padding: .1rem .35rem; border-radius: 4px; }
+a.btn.secondary { display: inline-block; }

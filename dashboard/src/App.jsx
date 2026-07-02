@@ -1,8 +1,20 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import ClusterView from './ClusterView.jsx';
+import { animateDemoCluster, demoCluster, demoMissions, demoTraces } from './demoData.js';
+
+const BASE = import.meta.env.BASE_URL || '/';
+const CODESPACE_URL =
+  import.meta.env.VITE_CODESPACE_URL ||
+  'https://codespaces.new/i-apologise/kubequest?quickstart=1';
+const REPO_URL = 'https://github.com/i-apologise/kubequest';
+
+function apiUrl(path) {
+  if (path.startsWith('/api')) return path;
+  return path;
+}
 
 async function api(path, opts) {
-  const r = await fetch(path, {
+  const r = await fetch(apiUrl(path), {
     headers: { 'Content-Type': 'application/json' },
     ...opts,
   });
@@ -13,6 +25,7 @@ async function api(path, opts) {
 
 export default function App() {
   const [tab, setTab] = useState('cluster');
+  const [mode, setMode] = useState('connecting'); // connecting | live | demo
   const [cluster, setCluster] = useState(null);
   const [missions, setMissions] = useState([]);
   const [live, setLive] = useState(false);
@@ -22,12 +35,15 @@ export default function App() {
   const [range, setRange] = useState(null);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState('');
+  const [tick, setTick] = useState(0);
 
   const refreshMissions = useCallback(() => {
+    if (mode === 'demo') return;
     api('/api/missions').then((d) => setMissions(d.missions || [])).catch(() => {});
-  }, []);
+  }, [mode]);
 
   const refreshTelemetry = useCallback(async () => {
+    if (mode === 'demo') return;
     try {
       const s = await api('/api/telemetry/status');
       setTelStatus(s);
@@ -42,14 +58,43 @@ export default function App() {
         setRange(rr);
       }
     } catch {
-      /* stack not up yet */
+      /* stack not up */
     }
-  }, []);
+  }, [mode]);
 
   useEffect(() => {
-    api('/api/cluster').then(setCluster).catch(() => {});
-    refreshMissions();
-    refreshTelemetry();
+    let cancelled = false;
+    (async () => {
+      try {
+        await api('/api/health');
+        if (cancelled) return;
+        setMode('live');
+        const snap = await api('/api/cluster');
+        setCluster(snap);
+        refreshMissions();
+        refreshTelemetry();
+      } catch {
+        if (cancelled) return;
+        setMode('demo');
+        setCluster(demoCluster);
+        setMissions(demoMissions);
+        setTraces(demoTraces);
+        setMetrics({
+          data: {
+            result: [
+              { metric: { route: '/api/hello', status: '200' }, value: [Date.now() / 1000, '42'] },
+              { metric: { route: '/api/boom', status: '500' }, value: [Date.now() / 1000, '3'] },
+            ],
+          },
+        });
+        setTelStatus({ jaeger: { ok: false }, prometheus: { ok: false }, telemetryApi: { ok: false } });
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [refreshMissions, refreshTelemetry]);
+
+  useEffect(() => {
+    if (mode !== 'live') return undefined;
     const es = new EventSource('/api/events');
     es.addEventListener('cluster', (ev) => {
       setLive(true);
@@ -61,17 +106,32 @@ export default function App() {
       refreshTelemetry();
     }, 5000);
     return () => { es.close(); clearInterval(t); };
-  }, [refreshMissions, refreshTelemetry]);
+  }, [mode, refreshMissions, refreshTelemetry]);
 
+  useEffect(() => {
+    if (mode !== 'demo') return undefined;
+    const t = setInterval(() => setTick((x) => x + 1), 2000);
+    return () => clearInterval(t);
+  }, [mode]);
+
+  useEffect(() => {
+    if (mode === 'demo') setCluster(animateDemoCluster(demoCluster, tick));
+  }, [mode, tick]);
+
+  const viewCluster = cluster;
   const stats = useMemo(() => ({
-    pods: cluster?.pods?.length || 0,
-    ready: cluster?.pods?.filter((p) => p.ready).length || 0,
-    deps: cluster?.deployments?.length || 0,
-    svcs: cluster?.services?.length || 0,
-    cms: cluster?.configMaps?.length || 0,
-  }), [cluster]);
+    pods: viewCluster?.pods?.length || 0,
+    ready: viewCluster?.pods?.filter((p) => p.ready).length || 0,
+    deps: viewCluster?.deployments?.length || 0,
+    svcs: viewCluster?.services?.length || 0,
+    cms: viewCluster?.configMaps?.length || 0,
+  }), [viewCluster]);
 
   const sendTraffic = async () => {
+    if (mode === 'demo') {
+      setMsg('Demo mode on GitHub Pages — launch Codespaces to hit a real cluster.');
+      return;
+    }
     setBusy(true);
     setMsg('');
     try {
@@ -89,28 +149,48 @@ export default function App() {
   };
 
   const bars = useMemo(() => {
+    if (mode === 'demo') {
+      return Array.from({ length: 40 }, (_, i) => 0.2 + Math.abs(Math.sin((tick + i) / 3)) * 0.8);
+    }
     const series = range?.data?.result?.[0]?.values || [];
     return series.slice(-40).map(([, v]) => Number(v) || 0);
-  }, [range]);
+  }, [range, mode, tick]);
   const maxBar = Math.max(0.001, ...bars);
 
   return (
     <div className="app">
+      {mode !== 'live' && (
+        <div className="banner">
+          <div>
+            <strong>Play KubeQuest in the cloud — no local Docker.</strong>
+            <div className="banner-sub">
+              GitHub Pages only hosts this UI. Real kubectl + kind + OpenTelemetry run in a free Codespace.
+              {mode === 'demo' ? ' Showing an animated demo preview.' : ' Connecting…'}
+            </div>
+          </div>
+          <div className="banner-actions">
+            <a className="btn" href={CODESPACE_URL} target="_blank" rel="noreferrer">Play in Codespaces</a>
+            <a className="btn secondary" href={REPO_URL} target="_blank" rel="noreferrer">Repo</a>
+          </div>
+        </div>
+      )}
+
       <header className="top">
-        <div className="brand">KUBE<span>QUEST</span> LIVE</div>
+        <div className="brand">KUBE<span>QUEST</span> {mode === 'demo' ? 'DEMO' : 'LIVE'}</div>
         <nav className="tabs">
-          {['cluster', 'traces', 'metrics', 'missions'].map((id) => (
+          {['cluster', 'traces', 'metrics', 'missions', 'play'].map((id) => (
             <button key={id} type="button" className={`tab ${tab === id ? 'active' : ''}`} onClick={() => setTab(id)}>
               {id}
             </button>
           ))}
         </nav>
         <div className="row" style={{ margin: 0 }}>
-          <span className={`pill ${live ? 'on' : 'off'}`}>{live ? 'SSE live' : 'connecting'}</span>
+          <span className={`pill ${mode === 'live' && live ? 'on' : mode === 'demo' ? 'off' : 'off'}`}>
+            {mode === 'live' ? (live ? 'SSE live' : 'live api') : 'pages demo'}
+          </span>
           <span className={`pill ${telStatus?.jaeger?.ok ? 'on' : 'off'}`}>jaeger</span>
           <span className={`pill ${telStatus?.prometheus?.ok ? 'on' : 'off'}`}>prom</span>
-          <span className={`pill ${telStatus?.telemetryApi?.ok ? 'on' : 'off'}`}>api</span>
-          <span className="pill mono">ns/{cluster?.namespace || 'kubequest'}</span>
+          <span className="pill mono">ns/{viewCluster?.namespace || 'kubequest'}</span>
         </div>
       </header>
 
@@ -123,9 +203,30 @@ export default function App() {
               <div className="d">{m.track} · {m.detail}</div>
             </div>
           ))}
+          <a className="btn" style={{ display: 'block', textAlign: 'center', marginTop: '1rem', textDecoration: 'none' }} href={CODESPACE_URL} target="_blank" rel="noreferrer">
+            Play for real
+          </a>
         </aside>
 
         <section className="content">
+          {tab === 'play' && (
+            <div className="play-panel">
+              <h2>How to play (zero local setup)</h2>
+              <ol>
+                <li>Click <strong>Play in Codespaces</strong> (2-core is fine; 4-core is smoother).</li>
+                <li>Wait for the devcontainer to finish (kind cluster + telemetry image).</li>
+                <li>In the Codespace terminal run <code className="mono">npm start</code>.</li>
+                <li>Open forwarded port <strong>3847</strong> for the live UI tied to your real cluster.</li>
+                <li>Type real <code className="mono">kubectl</code> commands in the game prompt; watch this UI update.</li>
+              </ol>
+              <p>Codespaces free tier includes monthly core-hours. Suspend the codespace when you stop.</p>
+              <div className="row">
+                <a className="btn" href={CODESPACE_URL} target="_blank" rel="noreferrer">Open Codespace</a>
+                <a className="btn secondary" href={`${REPO_URL}/actions`} target="_blank" rel="noreferrer">CI e2e runs</a>
+              </div>
+            </div>
+          )}
+
           {tab === 'cluster' && (
             <>
               <div className="grid cards">
@@ -135,12 +236,12 @@ export default function App() {
                 <div className="card"><div className="label">ConfigMaps</div><div className="value">{stats.cms}</div></div>
               </div>
               <p style={{ color: 'var(--muted)', fontSize: '.85rem' }}>
-                Updates stream as you run kubectl in the game terminal.
+                {mode === 'live' ? 'Updates stream as you run kubectl in the game terminal.' : 'Demo preview only on GitHub Pages. Launch Codespaces for a live cluster mirror.'}
               </p>
               <div className="canvas-wrap">
-                <ClusterView cluster={cluster} />
+                <ClusterView cluster={viewCluster} />
               </div>
-              <ResourceTables cluster={cluster} />
+              <ResourceTables cluster={viewCluster} />
             </>
           )}
 
@@ -151,9 +252,7 @@ export default function App() {
                 <button type="button" className="btn secondary" onClick={refreshTelemetry}>Refresh</button>
                 {msg && <span className="mono" style={{ fontSize: '.8rem', color: 'var(--accent)' }}>{msg}</span>}
               </div>
-              {!traces.length && (
-                <div className="empty">No traces yet. Deploy the telemetry stack (missions 9–11), then generate traffic.</div>
-              )}
+              {!traces.length && <div className="empty">No traces yet.</div>}
               {traces.map((t) => (
                 <div key={t.traceID} className="trace">
                   <div className="mono id">{t.traceID}</div>
@@ -201,10 +300,7 @@ export default function App() {
                     <td>{m.title}</td>
                     <td>{m.track}</td>
                     <td>{m.xp}</td>
-                    <td>
-                      <span className={`dot ${m.met ? 'ok' : 'wait'}`} />
-                      {m.detail}
-                    </td>
+                    <td><span className={`dot ${m.met ? 'ok' : 'wait'}`} />{m.detail}</td>
                   </tr>
                 ))}
               </tbody>
