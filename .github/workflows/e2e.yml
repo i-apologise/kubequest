@@ -3,7 +3,13 @@ name: e2e
 on:
   push:
     branches: [main, master]
+    paths-ignore:
+      - 'live/**'
+      - '**.md'
   pull_request:
+    paths-ignore:
+      - 'live/**'
+      - '**.md'
   workflow_dispatch:
 
 concurrency:

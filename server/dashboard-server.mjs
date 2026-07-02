@@ -18,9 +18,23 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
 const PORT = Number(process.env.DASHBOARD_PORT || 3847);
 
+const PAGES_ORIGIN = process.env.PAGES_ORIGIN || 'https://i-apologise.github.io';
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin(origin, cb) {
+    if (!origin) return cb(null, true);
+    if (origin === PAGES_ORIGIN || origin.startsWith(`${PAGES_ORIGIN}`)) return cb(null, true);
+    if (/\.github\.io$/.test(new URL(origin).host)) return cb(null, true);
+    if (/\.app\.github\.dev$/.test(new URL(origin).host)) return cb(null, true);
+    if (/^https?:\/\/localhost(?::\d+)?$/.test(origin)) return cb(null, true);
+    return cb(null, true);
+  },
+}));
 app.use(express.json());
+app.use((req, res, next) => {
+  res.setHeader('Cache-Control', 'no-store');
+  next();
+});
 
 let lastSnap = null;
 const clients = new Set();
@@ -44,7 +58,26 @@ async function refreshLoop() {
 }
 
 app.get('/api/health', async (_req, res) => {
-  res.json(await clusterHealth());
+  const health = await clusterHealth();
+  const codespace = process.env.CODESPACE_NAME || null;
+  res.json({
+    ...health,
+    bridge: {
+      pagesOrigin: PAGES_ORIGIN,
+      codespace,
+      publicApiUrl: codespace ? `https://${codespace}-3847.app.github.dev` : null,
+      mirrorEnabled: Boolean(process.env.GH_TOKEN || process.env.GITHUB_TOKEN),
+    },
+  });
+});
+
+app.get('/api/snapshot', async (_req, res) => {
+  try {
+    const snap = await buildSnapshot();
+    res.json(snap);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
 });
 
 app.get('/api/cluster', async (_req, res) => {
@@ -200,6 +233,120 @@ app.use((req, res, next) => {
   });
 });
 
+
+async function buildSnapshot() {
+  const [health, cluster, missionRows, telStatus, traces, metrics] = await Promise.all([
+    clusterHealth(),
+    getClusterSnapshot().catch(() => null),
+    Promise.all(missions.map(async (m) => {
+      try {
+        const status = await checkMission(m);
+        return { id: m.id, title: m.title, xp: m.xp, track: m.track || 'core', goal: m.goal, winHint: m.winHint, ...status };
+      } catch (e) {
+        return { id: m.id, title: m.title, xp: m.xp, track: m.track || 'core', met: false, detail: e.message };
+      }
+    })),
+    (async () => {
+      try {
+        await ensureTelemetryForwards();
+        const [jaeger, prom, apiHealth] = await Promise.all([
+          fetch('http://127.0.0.1:16686/api/services').then((r) => r.json()).then((d) => ({ ok: true, services: d.data || [] })).catch(() => ({ ok: false, services: [] })),
+          fetch('http://127.0.0.1:19090/-/ready').then((r) => ({ ok: r.ok })).catch(() => ({ ok: false })),
+          fetch('http://127.0.0.1:18080/healthz').then((r) => r.json()).then((d) => ({ ok: true, body: d })).catch(() => ({ ok: false })),
+        ]);
+        return { jaeger, prometheus: prom, telemetryApi: apiHealth };
+      } catch {
+        return { jaeger: { ok: false }, prometheus: { ok: false }, telemetryApi: { ok: false } };
+      }
+    })(),
+    (async () => {
+      try {
+        await ensureTelemetryForwards();
+        const r = await fetch('http://127.0.0.1:16686/api/traces?service=telemetry-api&limit=15');
+        if (!r.ok) return [];
+        const data = await r.json();
+        return (data.data || []).map((t) => summarizeTrace(t));
+      } catch { return []; }
+    })(),
+    (async () => {
+      try {
+        await ensureTelemetryForwards();
+        const r = await fetch('http://127.0.0.1:19090/api/v1/query?query=kq_http_requests_total');
+        if (!r.ok) return null;
+        return r.json();
+      } catch { return null; }
+    })(),
+  ]);
+  const codespace = process.env.CODESPACE_NAME || null;
+  return {
+    updatedAt: new Date().toISOString(),
+    source: codespace ? `codespace:${codespace}` : 'local',
+    publicApiUrl: codespace ? `https://${codespace}-3847.app.github.dev` : null,
+    health,
+    cluster,
+    missions: missionRows,
+    telemetry: telStatus,
+    traces,
+    metrics,
+  };
+}
+
+async function mirrorSnapshotLoop() {
+  const token = process.env.GH_TOKEN || process.env.GITHUB_TOKEN;
+  const repo = process.env.GITHUB_REPOSITORY || 'i-apologise/kubequest';
+  if (!token) {
+    console.log('  (mirror off — set GH_TOKEN to publish live/state.json for GitHub Pages)');
+    return;
+  }
+  let lastSha = null;
+  let lastPayload = '';
+  for (;;) {
+    try {
+      const snap = await buildSnapshot();
+      const payload = JSON.stringify(snap, null, 2) + '\n';
+      if (payload === lastPayload) {
+        await new Promise((r) => setTimeout(r, 15000));
+        continue;
+      }
+      lastPayload = payload;
+      const filePath = 'live/state.json';
+      const metaUrl = `https://api.github.com/repos/${repo}/contents/${filePath}`;
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        Accept: 'application/vnd.github+json',
+        'X-GitHub-Api-Version': '2022-11-28',
+        'User-Agent': 'kubequest-mirror',
+      };
+      if (!lastSha) {
+        const cur = await fetch(metaUrl, { headers });
+        if (cur.ok) {
+          const body = await cur.json();
+          lastSha = body.sha;
+        }
+      }
+      const body = {
+        message: '[skip ci] mirror: live cluster snapshot for GitHub Pages',
+        content: Buffer.from(payload).toString('base64'),
+        branch: process.env.MIRROR_BRANCH || 'main',
+      };
+      if (lastSha) body.sha = lastSha;
+      const put = await fetch(metaUrl, { method: 'PUT', headers: { ...headers, 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+      if (put.ok) {
+        const saved = await put.json();
+        lastSha = saved.content?.sha || lastSha;
+        console.log(`  mirrored snapshot @ ${snap.updatedAt}`);
+      } else {
+        const err = await put.text();
+        console.log(`  mirror failed: ${put.status} ${err.slice(0, 200)}`);
+        lastSha = null;
+      }
+    } catch (e) {
+      console.log(`  mirror error: ${e.message}`);
+    }
+    await new Promise((r) => setTimeout(r, Number(process.env.MIRROR_INTERVAL_MS || 15000)));
+  }
+}
+
 const server = app.listen(PORT, async () => {
   console.log(`\n  📺 KubeQuest live UI  http://localhost:${PORT}`);
   console.log(`  📦 namespace: ${NAMESPACE}\n`);
@@ -209,7 +356,13 @@ const server = app.listen(PORT, async () => {
   } catch (e) {
     console.log('  (forwards will retry when services exist)');
   }
+  const codespace = process.env.CODESPACE_NAME;
+  if (codespace) {
+    console.log(`  🌉 Public bridge URL: https://${codespace}-3847.app.github.dev`);
+    console.log('     Set port 3847 visibility to Public, then paste that URL on GitHub Pages.');
+  }
   refreshLoop();
+  mirrorSnapshotLoop();
 });
 
 process.on('exit', stopAllForwards);

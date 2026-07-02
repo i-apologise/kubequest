@@ -100,3 +100,12 @@ th { color: var(--muted); font-weight: 600; font-size: .68rem; text-transform: u
 .play-panel ol { padding-left: 1.2rem; }
 .play-panel code { background: #1a2336; padding: .1rem .35rem; border-radius: 4px; }
 a.btn.secondary { display: inline-block; }
+.banner-live { background: linear-gradient(90deg, #065f46cc, #1d4ed8cc); }
+.connect-label { display: block; font-size: .75rem; color: var(--muted); margin: 1rem 0 .35rem; text-transform: uppercase; letter-spacing: .06em; }
+.connect-row { display: flex; gap: .5rem; flex-wrap: wrap; align-items: center; }
+.connect-input {
+  flex: 1; min-width: 16rem; padding: .55rem .7rem; border-radius: 8px; border: 1px solid var(--border);
+  background: #070d16; color: var(--text);
+}
+.error-text { color: var(--bad); font-size: .85rem; }
+.linkish { background: none; border: none; color: var(--accent); text-decoration: underline; cursor: pointer; padding: 0 .25rem; }

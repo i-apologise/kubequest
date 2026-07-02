@@ -14,14 +14,22 @@
   },
   "forwardPorts": [3847, 16686, 9090],
   "portsAttributes": {
-    "3847": { "label": "KubeQuest Live UI", "onAutoForward": "notify" },
-    "16686": { "label": "Jaeger UI", "onAutoForward": "silent" },
-    "9090": { "label": "Prometheus", "onAutoForward": "silent" }
+    "3847": {
+      "label": "KubeQuest API / Live UI",
+      "onAutoForward": "notify",
+      "visibility": "public"
+    },
+    "16686": { "label": "Jaeger UI", "onAutoForward": "silent", "visibility": "private" },
+    "9090": { "label": "Prometheus", "onAutoForward": "silent", "visibility": "private" }
   },
   "hostRequirements": {
     "cpus": 4,
     "memory": "8gb",
     "storage": "32gb"
+  },
+  "remoteEnv": {
+    "GITHUB_REPOSITORY": "i-apologise/kubequest",
+    "MIRROR_INTERVAL_MS": "15000"
   },
   "onCreateCommand": "bash .devcontainer/on-create.sh",
   "postStartCommand": "bash .devcontainer/post-start.sh",

@@ -1,0 +1,12 @@
+{
+  "updatedAt": null,
+  "source": "none",
+  "publicApiUrl": null,
+  "health": { "connected": false },
+  "cluster": null,
+  "missions": [],
+  "telemetry": { "jaeger": { "ok": false }, "prometheus": { "ok": false }, "telemetryApi": { "ok": false } },
+  "traces": [],
+  "metrics": null,
+  "note": "Waiting for a Codespace running npm start with GH_TOKEN mirroring enabled."
+}

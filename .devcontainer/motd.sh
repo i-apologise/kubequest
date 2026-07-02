@@ -1,14 +1,18 @@
 #!/usr/bin/env bash
-cat <<'MOTD'
+NAME="${CODESPACE_NAME:-<codespace>}"
+cat <<MOTD
 
   KUBEQUEST on GitHub Codespaces
   ------------------------------
-    npm start          game terminal + live UI on port 3847
-    npm run game       terminal only
-    npm run dashboard  UI only
-    npm run audit      full e2e missions 1–12
+    npm start
 
-  Open forwarded port 3847 for the live cluster/traces/metrics UI.
-  Suspend the codespace when idle to save free hours.
+  Live UI in codespace: port 3847
+  Public bridge for GitHub Pages:
+    https://${NAME}-3847.app.github.dev
+  (Ports panel → 3847 → Port Visibility → Public)
+
+  GitHub Pages reads that bridge OR mirrored snapshots at:
+    https://i-apologise.github.io/kubequest/
+  Mirror uses GITHUB_TOKEN automatically in Codespaces.
 
 MOTD
