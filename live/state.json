@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-02T15:31:51.367Z",
+  "updatedAt": "2026-07-02T15:32:08.789Z",
   "source": "codespace:opulent-umbrella-wvrwwprpvw7g29qvq",
   "publicApiUrl": "https://opulent-umbrella-wvrwwprpvw7g29qvq-3847.app.github.dev",
   "health": {
@@ -168,7 +168,7 @@
       {
         "name": "jaeger-6d95cffbb4-v4qkd",
         "phase": "Running",
-        "ready": false,
+        "ready": true,
         "ip": "10.244.0.39",
         "node": "kubequest-control-plane",
         "labels": {
@@ -244,8 +244,8 @@
       {
         "name": "jaeger",
         "replicas": 1,
-        "readyReplicas": 0,
-        "availableReplicas": 0,
+        "readyReplicas": 1,
+        "availableReplicas": 1,
         "images": [
           "jaegertracing/all-in-one:1.57"
         ],
@@ -395,7 +395,7 @@
       "goal": "Deploy Jaeger, the OTel Collector, and Prometheus in kubequest (all Ready).",
       "winHint": "deploy/jaeger, otel-collector, prometheus are Ready",
       "met": false,
-      "detail": "jaeger: 0/1 ready (need 1)"
+      "detail": "deployment not found"
     },
     {
       "id": 10,
@@ -431,7 +431,9 @@
   "telemetry": {
     "jaeger": {
       "ok": true,
-      "services": []
+      "services": [
+        "jaeger-all-in-one"
+      ]
     },
     "prometheus": {
       "ok": false
