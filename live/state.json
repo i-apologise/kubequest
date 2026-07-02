@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-02T15:20:30.374Z",
+  "updatedAt": "2026-07-02T15:20:47.799Z",
   "source": "codespace:opulent-umbrella-wvrwwprpvw7g29qvq",
   "publicApiUrl": "https://opulent-umbrella-wvrwwprpvw7g29qvq-3847.app.github.dev",
   "health": {
@@ -31,6 +31,44 @@
         ],
         "restarts": 0,
         "createdAt": "2026-07-02T15:19:46.000Z"
+      },
+      {
+        "name": "fleet-8ddd5dfdb-2xb7z",
+        "phase": "Running",
+        "ready": true,
+        "ip": "10.244.0.29",
+        "node": "kubequest-control-plane",
+        "labels": {
+          "app": "fleet",
+          "pod-template-hash": "8ddd5dfdb"
+        },
+        "containers": [
+          {
+            "name": "nginx",
+            "image": "nginx:alpine"
+          }
+        ],
+        "restarts": 0,
+        "createdAt": "2026-07-02T15:20:30.000Z"
+      },
+      {
+        "name": "fleet-8ddd5dfdb-6bnbv",
+        "phase": "Running",
+        "ready": true,
+        "ip": "10.244.0.30",
+        "node": "kubequest-control-plane",
+        "labels": {
+          "app": "fleet",
+          "pod-template-hash": "8ddd5dfdb"
+        },
+        "containers": [
+          {
+            "name": "nginx",
+            "image": "nginx:alpine"
+          }
+        ],
+        "restarts": 0,
+        "createdAt": "2026-07-02T15:20:30.000Z"
       },
       {
         "name": "fleet-8ddd5dfdb-9qbnw",
@@ -74,9 +112,9 @@
     "deployments": [
       {
         "name": "fleet",
-        "replicas": 2,
-        "readyReplicas": 2,
-        "availableReplicas": 2,
+        "replicas": 4,
+        "readyReplicas": 4,
+        "availableReplicas": 4,
         "images": [
           "nginx:alpine"
         ],
@@ -85,7 +123,23 @@
         }
       }
     ],
-    "services": [],
+    "services": [
+      {
+        "name": "fleet-svc",
+        "type": "ClusterIP",
+        "clusterIP": "10.96.84.95",
+        "ports": [
+          {
+            "port": 80,
+            "targetPort": 80,
+            "protocol": "TCP"
+          }
+        ],
+        "selector": {
+          "app": "fleet"
+        }
+      }
+    ],
     "configMaps": []
   },
   "missions": [
@@ -107,7 +161,7 @@
       "goal": "Create deployment/fleet with 2 Ready replicas (nginx).",
       "winHint": "deploy/fleet 2/2 Ready",
       "met": true,
-      "detail": "fleet: 2/2 ready (need 2)"
+      "detail": "fleet: 4/4 ready (need 2)"
     },
     {
       "id": 3,
@@ -116,8 +170,8 @@
       "track": "core",
       "goal": "Scale deployment/fleet to 4 Ready replicas.",
       "winHint": "deploy/fleet 4/4 Ready",
-      "met": false,
-      "detail": "fleet: 2/2 ready (need 4)"
+      "met": true,
+      "detail": "fleet: 4/4 ready (need 4)"
     },
     {
       "id": 4,
@@ -126,8 +180,8 @@
       "track": "core",
       "goal": "Expose fleet with a ClusterIP Service named fleet-svc on port 80.",
       "winHint": "svc/fleet-svc exists",
-      "met": false,
-      "detail": "service not found"
+      "met": true,
+      "detail": "fleet-svc ClusterIP 10.96.84.95"
     },
     {
       "id": 5,
@@ -147,7 +201,7 @@
       "goal": "Set deploy/fleet image to nginx:1.27-alpine and have at least one Ready pod.",
       "winHint": "fleet image contains 1.27",
       "met": false,
-      "detail": "images: nginx:alpine, ready: 2"
+      "detail": "images: nginx:alpine, ready: 4"
     },
     {
       "id": 7,
