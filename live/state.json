@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-02T15:57:30.399Z",
+  "updatedAt": "2026-07-02T15:57:50.265Z",
   "source": "codespace:opulent-umbrella-wvrwwprpvw7g29qvq",
   "publicApiUrl": "https://opulent-umbrella-wvrwwprpvw7g29qvq-3847.app.github.dev",
   "health": {
@@ -618,8 +618,8 @@
     "jaeger": {
       "ok": true,
       "services": [
-        "telemetry-api",
-        "jaeger-all-in-one"
+        "jaeger-all-in-one",
+        "telemetry-api"
       ]
     },
     "prometheus": {
@@ -634,123 +634,6 @@
   },
   "traces": [
     {
-      "traceID": "8c10cfb06847fc4c4908b95a143ec26a",
-      "spans": 1,
-      "rootOperation": "GET",
-      "durationUs": 716,
-      "services": [
-        "telemetry-api"
-      ]
-    },
-    {
-      "traceID": "075e1c193de18c72132338531015667d",
-      "spans": 1,
-      "rootOperation": "GET",
-      "durationUs": 671,
-      "services": [
-        "telemetry-api"
-      ]
-    },
-    {
-      "traceID": "37bddfc50d843a982b43f022881bc75d",
-      "spans": 1,
-      "rootOperation": "GET",
-      "durationUs": 667,
-      "services": [
-        "telemetry-api"
-      ]
-    },
-    {
-      "traceID": "047bd91c7f478924b3eb2d9132d1e5fc",
-      "spans": 1,
-      "rootOperation": "GET",
-      "durationUs": 808,
-      "services": [
-        "telemetry-api"
-      ]
-    },
-    {
-      "traceID": "2ef18ff8dcc3a7adf805c4144fc414d6",
-      "spans": 1,
-      "rootOperation": "GET",
-      "durationUs": 3711,
-      "services": [
-        "telemetry-api"
-      ]
-    },
-    {
-      "traceID": "35456719b9138aa5d26122bc552a047c",
-      "spans": 1,
-      "rootOperation": "GET",
-      "durationUs": 2206,
-      "services": [
-        "telemetry-api"
-      ]
-    },
-    {
-      "traceID": "44ad49f278f6f0708014b7780c985de8",
-      "spans": 1,
-      "rootOperation": "GET",
-      "durationUs": 694,
-      "services": [
-        "telemetry-api"
-      ]
-    },
-    {
-      "traceID": "f4fbe41ce7fc9a9cdee47d9b3984b001",
-      "spans": 1,
-      "rootOperation": "GET",
-      "durationUs": 1104,
-      "services": [
-        "telemetry-api"
-      ]
-    },
-    {
-      "traceID": "788261e10b9635e354652c4e2337daf9",
-      "spans": 1,
-      "rootOperation": "GET",
-      "durationUs": 3061,
-      "services": [
-        "telemetry-api"
-      ]
-    },
-    {
-      "traceID": "4d4701dd7ba19d41eff237b295ac1a03",
-      "spans": 1,
-      "rootOperation": "GET",
-      "durationUs": 888,
-      "services": [
-        "telemetry-api"
-      ]
-    },
-    {
-      "traceID": "dba0743d7bc83b0c451299ca474088f3",
-      "spans": 1,
-      "rootOperation": "GET",
-      "durationUs": 841,
-      "services": [
-        "telemetry-api"
-      ]
-    },
-    {
-      "traceID": "d3096d523ca2ac68036b39d9e78b3bb0",
-      "spans": 1,
-      "rootOperation": "GET",
-      "durationUs": 1869,
-      "services": [
-        "telemetry-api"
-      ]
-    },
-    {
-      "traceID": "451e92143217deb5fa6bf91a0de53f8b",
-      "spans": 1,
-      "rootOperation": "GET",
-      "durationUs": 781,
-      "services": [
-        "telemetry-api"
-      ]
-    },
-    {
       "traceID": "c55400d338a2848a9d29d0c118f8cf7a",
       "spans": 1,
       "rootOperation": "GET",
@@ -760,10 +643,127 @@
       ]
     },
     {
+      "traceID": "f069070b1203f15b817f14c6501e706e",
+      "spans": 1,
+      "rootOperation": "GET",
+      "durationUs": 703,
+      "services": [
+        "telemetry-api"
+      ]
+    },
+    {
+      "traceID": "1e8c7a97576abfd3de8cd72e93968a34",
+      "spans": 1,
+      "rootOperation": "GET",
+      "durationUs": 697,
+      "services": [
+        "telemetry-api"
+      ]
+    },
+    {
       "traceID": "bce7a9bf4e2e645ebc340a9d46469968",
       "spans": 1,
       "rootOperation": "GET",
       "durationUs": 752,
+      "services": [
+        "telemetry-api"
+      ]
+    },
+    {
+      "traceID": "2a92bc64666516bd12d2d0bc48394879",
+      "spans": 1,
+      "rootOperation": "GET",
+      "durationUs": 2924,
+      "services": [
+        "telemetry-api"
+      ]
+    },
+    {
+      "traceID": "d50abfdf3e207b3be8018a06c0b7d02d",
+      "spans": 1,
+      "rootOperation": "GET",
+      "durationUs": 701,
+      "services": [
+        "telemetry-api"
+      ]
+    },
+    {
+      "traceID": "d6a15776f940a96bcdb14bc478b85298",
+      "spans": 1,
+      "rootOperation": "GET",
+      "durationUs": 853,
+      "services": [
+        "telemetry-api"
+      ]
+    },
+    {
+      "traceID": "8eb1ec8bf3487a56b06b639b4b54ee10",
+      "spans": 1,
+      "rootOperation": "GET",
+      "durationUs": 761,
+      "services": [
+        "telemetry-api"
+      ]
+    },
+    {
+      "traceID": "bd21e0e8940a708ac8ed57c347b3f036",
+      "spans": 1,
+      "rootOperation": "GET",
+      "durationUs": 1299,
+      "services": [
+        "telemetry-api"
+      ]
+    },
+    {
+      "traceID": "4528048fe9882ece068dbd5467673f10",
+      "spans": 1,
+      "rootOperation": "GET",
+      "durationUs": 688,
+      "services": [
+        "telemetry-api"
+      ]
+    },
+    {
+      "traceID": "00a7cd07118d7d49b8db775306ae3d5f",
+      "spans": 1,
+      "rootOperation": "GET",
+      "durationUs": 826,
+      "services": [
+        "telemetry-api"
+      ]
+    },
+    {
+      "traceID": "939a52229679dcf6c20df98f1a1f209c",
+      "spans": 1,
+      "rootOperation": "GET",
+      "durationUs": 676,
+      "services": [
+        "telemetry-api"
+      ]
+    },
+    {
+      "traceID": "2cf1f79322c5f1b61fc53e23169f7057",
+      "spans": 1,
+      "rootOperation": "GET",
+      "durationUs": 716,
+      "services": [
+        "telemetry-api"
+      ]
+    },
+    {
+      "traceID": "3d14afc0b2fddcea9019f83f610f9687",
+      "spans": 1,
+      "rootOperation": "GET",
+      "durationUs": 706,
+      "services": [
+        "telemetry-api"
+      ]
+    },
+    {
+      "traceID": "be2f049b995623a6e5fbe785ad6917a3",
+      "spans": 1,
+      "rootOperation": "GET",
+      "durationUs": 2367,
       "services": [
         "telemetry-api"
       ]
@@ -799,7 +799,7 @@
             "telemetry_sdk_version": "1.30.1"
           },
           "value": [
-            1783007847.866,
+            1783007868.005,
             "1"
           ]
         }
