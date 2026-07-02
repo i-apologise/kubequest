@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-02T15:30:41.477Z",
+  "updatedAt": "2026-07-02T15:30:58.864Z",
   "source": "codespace:opulent-umbrella-wvrwwprpvw7g29qvq",
   "publicApiUrl": "https://opulent-umbrella-wvrwwprpvw7g29qvq-3847.app.github.dev",
   "health": {
@@ -109,6 +109,44 @@
         "createdAt": "2026-07-02T15:30:18.000Z"
       },
       {
+        "name": "healthy-app-8456778dbc-7mqkd",
+        "phase": "Running",
+        "ready": true,
+        "ip": "10.244.0.37",
+        "node": "kubequest-control-plane",
+        "labels": {
+          "app": "healthy-app",
+          "pod-template-hash": "8456778dbc"
+        },
+        "containers": [
+          {
+            "name": "nginx",
+            "image": "nginx:alpine"
+          }
+        ],
+        "restarts": 0,
+        "createdAt": "2026-07-02T15:30:45.000Z"
+      },
+      {
+        "name": "healthy-app-8456778dbc-jfrr6",
+        "phase": "Running",
+        "ready": true,
+        "ip": "10.244.0.36",
+        "node": "kubequest-control-plane",
+        "labels": {
+          "app": "healthy-app",
+          "pod-template-hash": "8456778dbc"
+        },
+        "containers": [
+          {
+            "name": "nginx",
+            "image": "nginx:alpine"
+          }
+        ],
+        "restarts": 0,
+        "createdAt": "2026-07-02T15:30:45.000Z"
+      },
+      {
         "name": "messenger",
         "phase": "Running",
         "ready": true,
@@ -138,6 +176,18 @@
         ],
         "labels": {
           "app": "fleet"
+        }
+      },
+      {
+        "name": "healthy-app",
+        "replicas": 2,
+        "readyReplicas": 2,
+        "availableReplicas": 2,
+        "images": [
+          "nginx:alpine"
+        ],
+        "labels": {
+          "app": "healthy-app"
         }
       }
     ],
@@ -235,8 +285,8 @@
       "track": "core",
       "goal": "Create deployment healthy-app (2 replicas, nginx) with HTTP readiness AND liveness probes on path / port 80.",
       "winHint": "deploy/healthy-app 2/2 Ready with probes",
-      "met": false,
-      "detail": "deployment not found"
+      "met": true,
+      "detail": "healthy-app: 2/2 ready (need 2)"
     },
     {
       "id": 8,
