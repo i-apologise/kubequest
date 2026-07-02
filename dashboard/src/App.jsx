@@ -96,7 +96,10 @@ export default function App() {
       setMsg(`Connected to ${normalized}`);
       return true;
     } catch (e) {
-      setConnectError(e.message);
+      const hint = /502|Failed to fetch|NetworkError|Load failed/i.test(String(e.message))
+        ? ' — 502/network usually means nothing is listening on 3847. In Codespaces run `npm run dashboard` or `npm start` and leave that terminal open. Confirm Ports shows 3847 as Public and Forwarded.'
+        : '';
+      setConnectError(`${e.message}${hint}`);
       setMode((m) => (m === 'live' ? 'mirror' : m));
       return false;
     }

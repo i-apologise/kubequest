@@ -11,7 +11,8 @@
     "build:telemetry": "bash scripts/build-telemetry-image.sh",
     "dashboard": "node server/dashboard-server.mjs",
     "game": "node game.mjs",
-    "start": "concurrently -k -n game,ui -c cyan,magenta \"npm run game\" \"npm run dashboard\"",
+    "start": "concurrently -n game,ui -c cyan,magenta \"npm run game\" \"npm run dashboard\"",
+    "start:ui": "npm run dashboard",
     "play": "npm start",
     "dev:ui": "npm run dev --prefix dashboard",
     "audit": "node scripts/e2e-audit.mjs"

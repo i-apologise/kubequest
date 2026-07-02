@@ -347,26 +347,46 @@ async function mirrorSnapshotLoop() {
   }
 }
 
-const server = app.listen(PORT, async () => {
-  console.log(`\n  📺 KubeQuest live UI  http://localhost:${PORT}`);
-  console.log(`  📦 namespace: ${NAMESPACE}\n`);
+const HOST = process.env.HOST || '0.0.0.0';
+
+const server = app.listen(PORT, HOST, async () => {
+  console.log(`\n  📺 KubeQuest live UI  http://127.0.0.1:${PORT} (bound on ${HOST})`);
+  console.log(`  📦 namespace: ${NAMESPACE}`);
+  console.log(`  ❤ health check: http://127.0.0.1:${PORT}/api/health\n`);
   try {
     await ensureNamespace();
     await ensureTelemetryForwards();
   } catch (e) {
-    console.log('  (forwards will retry when services exist)');
+    console.log(`  (forwards will retry when services exist: ${e.message})`);
   }
   const codespace = process.env.CODESPACE_NAME;
   if (codespace) {
     console.log(`  🌉 Public bridge URL: https://${codespace}-3847.app.github.dev`);
-    console.log('     Set port 3847 visibility to Public, then paste that URL on GitHub Pages.');
+    console.log('     Ports panel → 3847 → Public, then paste that URL on GitHub Pages.');
+    console.log('     If you see 502, this process is not running — keep npm start / npm run dashboard alive.\n');
   }
-  refreshLoop();
-  mirrorSnapshotLoop();
+  refreshLoop().catch((e) => console.error('refreshLoop', e));
+  mirrorSnapshotLoop().catch((e) => console.error('mirrorLoop', e));
+});
+
+server.on('error', (err) => {
+  console.error(`Failed to bind ${HOST}:${PORT}:`, err.message);
+  process.exit(1);
+});
+
+process.on('uncaughtException', (err) => {
+  console.error('uncaughtException (server keeps running):', err);
+});
+process.on('unhandledRejection', (err) => {
+  console.error('unhandledRejection (server keeps running):', err);
 });
 
 process.on('exit', stopAllForwards);
 process.on('SIGINT', () => {
+  stopAllForwards();
+  server.close(() => process.exit(0));
+});
+process.on('SIGTERM', () => {
   stopAllForwards();
   server.close(() => process.exit(0));
 });
