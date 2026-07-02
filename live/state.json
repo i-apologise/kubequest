@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-02T15:19:37.150Z",
+  "updatedAt": "2026-07-02T15:19:54.754Z",
   "source": "codespace:opulent-umbrella-wvrwwprpvw7g29qvq",
   "publicApiUrl": "https://opulent-umbrella-wvrwwprpvw7g29qvq-3847.app.github.dev",
   "health": {
@@ -13,7 +13,26 @@
   },
   "cluster": {
     "namespace": "kubequest",
-    "pods": [],
+    "pods": [
+      {
+        "name": "beacon",
+        "phase": "Running",
+        "ready": true,
+        "ip": "10.244.0.26",
+        "node": "kubequest-control-plane",
+        "labels": {
+          "run": "beacon"
+        },
+        "containers": [
+          {
+            "name": "beacon",
+            "image": "nginx:alpine"
+          }
+        ],
+        "restarts": 0,
+        "createdAt": "2026-07-02T15:19:46.000Z"
+      }
+    ],
     "deployments": [],
     "services": [],
     "configMaps": []
@@ -26,8 +45,8 @@
       "track": "core",
       "goal": "Have a Ready pod named beacon running nginx.",
       "winHint": "pod/beacon is Ready",
-      "met": false,
-      "detail": "beacon not found"
+      "met": true,
+      "detail": "beacon: Running Ready"
     },
     {
       "id": 2,
