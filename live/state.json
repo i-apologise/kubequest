@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-02T15:47:26.859Z",
+  "updatedAt": "2026-07-02T15:47:52.202Z",
   "source": "codespace:opulent-umbrella-wvrwwprpvw7g29qvq",
   "publicApiUrl": "https://opulent-umbrella-wvrwwprpvw7g29qvq-3847.app.github.dev",
   "health": {
@@ -225,9 +225,9 @@
       },
       {
         "name": "prometheus-78d98949df-glslq",
-        "phase": "Pending",
-        "ready": false,
-        "ip": null,
+        "phase": "Running",
+        "ready": true,
+        "ip": "10.244.0.41",
         "node": "kubequest-control-plane",
         "labels": {
           "app": "prometheus",
@@ -310,8 +310,8 @@
       {
         "name": "prometheus",
         "replicas": 1,
-        "readyReplicas": 0,
-        "availableReplicas": 0,
+        "readyReplicas": 1,
+        "availableReplicas": 1,
         "images": [
           "prom/prometheus:v2.51.2"
         ],
@@ -512,8 +512,8 @@
       "track": "telemetry",
       "goal": "Deploy Jaeger, the OTel Collector, and Prometheus in kubequest (all Ready).",
       "winHint": "deploy/jaeger, otel-collector, prometheus are Ready",
-      "met": false,
-      "detail": "prometheus: 0/1 ready (need 1)"
+      "met": true,
+      "detail": "telemetry stack deployments Ready"
     },
     {
       "id": 10,
@@ -543,7 +543,7 @@
       "goal": "Prometheus has series for kq_http_requests_total.",
       "winHint": "prometheus query kq_http_requests_total returns series",
       "met": false,
-      "detail": "prometheus: 0/1 ready (need 1)"
+      "detail": "metric kq_http_requests_total has no series yet — generate traffic"
     }
   ],
   "telemetry": {
@@ -554,12 +554,18 @@
       ]
     },
     "prometheus": {
-      "ok": false
+      "ok": true
     },
     "telemetryApi": {
       "ok": false
     }
   },
   "traces": [],
-  "metrics": null
+  "metrics": {
+    "status": "success",
+    "data": {
+      "resultType": "vector",
+      "result": []
+    }
+  }
 }
