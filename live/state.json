@@ -1,12 +1,157 @@
 {
-  "updatedAt": null,
-  "source": "none",
-  "publicApiUrl": null,
-  "health": { "connected": false },
-  "cluster": null,
-  "missions": [],
-  "telemetry": { "jaeger": { "ok": false }, "prometheus": { "ok": false }, "telemetryApi": { "ok": false } },
+  "updatedAt": "2026-07-02T15:03:18.083Z",
+  "source": "codespace:opulent-umbrella-wvrwwprpvw7g29qvq",
+  "publicApiUrl": "https://opulent-umbrella-wvrwwprpvw7g29qvq-3847.app.github.dev",
+  "health": {
+    "connected": true,
+    "nodes": [
+      {
+        "name": "kubequest-control-plane",
+        "ready": true
+      }
+    ]
+  },
+  "cluster": {
+    "namespace": "kubequest",
+    "pods": [],
+    "deployments": [],
+    "services": [],
+    "configMaps": []
+  },
+  "missions": [
+    {
+      "id": 1,
+      "title": "Your First Pod",
+      "xp": 100,
+      "track": "core",
+      "goal": "Have a Ready pod named beacon running nginx.",
+      "winHint": "pod/beacon is Ready",
+      "met": false,
+      "detail": "beacon not found"
+    },
+    {
+      "id": 2,
+      "title": "Deployments",
+      "xp": 150,
+      "track": "core",
+      "goal": "Create deployment/fleet with 2 Ready replicas (nginx).",
+      "winHint": "deploy/fleet 2/2 Ready",
+      "met": false,
+      "detail": "deployment not found"
+    },
+    {
+      "id": 3,
+      "title": "Scale",
+      "xp": 120,
+      "track": "core",
+      "goal": "Scale deployment/fleet to 4 Ready replicas.",
+      "winHint": "deploy/fleet 4/4 Ready",
+      "met": false,
+      "detail": "deployment not found"
+    },
+    {
+      "id": 4,
+      "title": "Services",
+      "xp": 180,
+      "track": "core",
+      "goal": "Expose fleet with a ClusterIP Service named fleet-svc on port 80.",
+      "winHint": "svc/fleet-svc exists",
+      "met": false,
+      "detail": "service not found"
+    },
+    {
+      "id": 5,
+      "title": "ConfigMaps",
+      "xp": 160,
+      "track": "core",
+      "goal": "Create configmap quest-config (key MESSAGE) and a Ready pod messenger whose MESSAGE env comes from that configmap.",
+      "winHint": "pod/messenger Ready and MESSAGE from cm/quest-config",
+      "met": false,
+      "detail": "messenger not found"
+    },
+    {
+      "id": 6,
+      "title": "Rolling Update",
+      "xp": 200,
+      "track": "core",
+      "goal": "Set deploy/fleet image to nginx:1.27-alpine and have at least one Ready pod.",
+      "winHint": "fleet image contains 1.27",
+      "met": false,
+      "detail": "deployment not found"
+    },
+    {
+      "id": 7,
+      "title": "Health Probes",
+      "xp": 220,
+      "track": "core",
+      "goal": "Create deployment healthy-app (2 replicas, nginx) with HTTP readiness AND liveness probes on path / port 80.",
+      "winHint": "deploy/healthy-app 2/2 Ready with probes",
+      "met": false,
+      "detail": "deployment not found"
+    },
+    {
+      "id": 8,
+      "title": "Resources",
+      "xp": 250,
+      "track": "core",
+      "goal": "Create deployment bounded-app (1 replica, nginx) with CPU/memory requests AND limits set.",
+      "winHint": "deploy/bounded-app 1/1 Ready with resources",
+      "met": false,
+      "detail": "deployment not found"
+    },
+    {
+      "id": 9,
+      "title": "Observability Stack",
+      "xp": 300,
+      "track": "telemetry",
+      "goal": "Deploy Jaeger, the OTel Collector, and Prometheus in kubequest (all Ready).",
+      "winHint": "deploy/jaeger, otel-collector, prometheus are Ready",
+      "met": false,
+      "detail": "deployment not found"
+    },
+    {
+      "id": 10,
+      "title": "Instrumented Service",
+      "xp": 300,
+      "track": "telemetry",
+      "goal": "Deploy telemetry-api (2 Ready replicas) configured to send OTLP to otel-collector:4318.",
+      "winHint": "deploy/telemetry-api 2/2 Ready",
+      "met": false,
+      "detail": "deployment not found"
+    },
+    {
+      "id": 11,
+      "title": "Live Traces",
+      "xp": 350,
+      "track": "telemetry",
+      "goal": "Generate traffic so Jaeger has traces for service telemetry-api.",
+      "winHint": "jaeger has traces for telemetry-api",
+      "met": false,
+      "detail": "deployment not found"
+    },
+    {
+      "id": 12,
+      "title": "Live Metrics",
+      "xp": 350,
+      "track": "telemetry",
+      "goal": "Prometheus has series for kq_http_requests_total.",
+      "winHint": "prometheus query kq_http_requests_total returns series",
+      "met": false,
+      "detail": "deployment not found"
+    }
+  ],
+  "telemetry": {
+    "jaeger": {
+      "ok": false,
+      "services": []
+    },
+    "prometheus": {
+      "ok": false
+    },
+    "telemetryApi": {
+      "ok": false
+    }
+  },
   "traces": [],
-  "metrics": null,
-  "note": "Waiting for a Codespace running npm start with GH_TOKEN mirroring enabled."
+  "metrics": null
 }
