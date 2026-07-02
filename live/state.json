@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-02T15:35:23.424Z",
+  "updatedAt": "2026-07-02T15:35:41.304Z",
   "source": "codespace:opulent-umbrella-wvrwwprpvw7g29qvq",
   "publicApiUrl": "https://opulent-umbrella-wvrwwprpvw7g29qvq-3847.app.github.dev",
   "health": {
@@ -202,6 +202,26 @@
         ],
         "restarts": 0,
         "createdAt": "2026-07-02T15:29:37.000Z"
+      },
+      {
+        "name": "otel-collector-7576dbd65f-pzldq",
+        "phase": "Pending",
+        "ready": false,
+        "ip": null,
+        "node": "kubequest-control-plane",
+        "labels": {
+          "app": "otel-collector",
+          "kq.stack": "telemetry",
+          "pod-template-hash": "7576dbd65f"
+        },
+        "containers": [
+          {
+            "name": "otel-collector",
+            "image": "otel/opentelemetry-collector-contrib:0.96.0"
+          }
+        ],
+        "restarts": 0,
+        "createdAt": "2026-07-02T15:35:38.000Z"
       }
     ],
     "deployments": [
@@ -253,6 +273,19 @@
           "app": "jaeger",
           "kq.stack": "telemetry"
         }
+      },
+      {
+        "name": "otel-collector",
+        "replicas": 1,
+        "readyReplicas": 0,
+        "availableReplicas": 0,
+        "images": [
+          "otel/opentelemetry-collector-contrib:0.96.0"
+        ],
+        "labels": {
+          "app": "otel-collector",
+          "kq.stack": "telemetry"
+        }
       }
     ],
     "services": [
@@ -294,6 +327,31 @@
         ],
         "selector": {
           "app": "jaeger"
+        }
+      },
+      {
+        "name": "otel-collector",
+        "type": "ClusterIP",
+        "clusterIP": "10.96.4.5",
+        "ports": [
+          {
+            "port": 4318,
+            "targetPort": 4318,
+            "protocol": "TCP"
+          },
+          {
+            "port": 4317,
+            "targetPort": 4317,
+            "protocol": "TCP"
+          },
+          {
+            "port": 8889,
+            "targetPort": 8889,
+            "protocol": "TCP"
+          }
+        ],
+        "selector": {
+          "app": "otel-collector"
         }
       }
     ],
@@ -401,7 +459,7 @@
       "goal": "Deploy Jaeger, the OTel Collector, and Prometheus in kubequest (all Ready).",
       "winHint": "deploy/jaeger, otel-collector, prometheus are Ready",
       "met": false,
-      "detail": "deployment not found"
+      "detail": "otel-collector: 0/1 ready (need 1)"
     },
     {
       "id": 10,
