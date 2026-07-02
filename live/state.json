@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-02T15:19:19.661Z",
+  "updatedAt": "2026-07-02T15:19:37.150Z",
   "source": "codespace:opulent-umbrella-wvrwwprpvw7g29qvq",
   "publicApiUrl": "https://opulent-umbrella-wvrwwprpvw7g29qvq-3847.app.github.dev",
   "health": {
@@ -13,116 +13,8 @@
   },
   "cluster": {
     "namespace": "kubequest",
-    "pods": [
-      {
-        "name": "beacon",
-        "phase": "Running",
-        "ready": true,
-        "ip": "10.244.0.21",
-        "node": "kubequest-control-plane",
-        "labels": {
-          "run": "beacon"
-        },
-        "containers": [
-          {
-            "name": "beacon",
-            "image": "nginx:alpine"
-          }
-        ],
-        "restarts": 0,
-        "createdAt": "2026-07-02T15:14:32.000Z"
-      },
-      {
-        "name": "fleet-8ddd5dfdb-24dxc",
-        "phase": "Running",
-        "ready": true,
-        "ip": "10.244.0.25",
-        "node": "kubequest-control-plane",
-        "labels": {
-          "app": "fleet",
-          "pod-template-hash": "8ddd5dfdb"
-        },
-        "containers": [
-          {
-            "name": "nginx",
-            "image": "nginx:alpine"
-          }
-        ],
-        "restarts": 0,
-        "createdAt": "2026-07-02T15:15:02.000Z"
-      },
-      {
-        "name": "fleet-8ddd5dfdb-lpl9b",
-        "phase": "Running",
-        "ready": true,
-        "ip": "10.244.0.24",
-        "node": "kubequest-control-plane",
-        "labels": {
-          "app": "fleet",
-          "pod-template-hash": "8ddd5dfdb"
-        },
-        "containers": [
-          {
-            "name": "nginx",
-            "image": "nginx:alpine"
-          }
-        ],
-        "restarts": 0,
-        "createdAt": "2026-07-02T15:15:02.000Z"
-      },
-      {
-        "name": "fleet-8ddd5dfdb-mmp84",
-        "phase": "Running",
-        "ready": true,
-        "ip": "10.244.0.22",
-        "node": "kubequest-control-plane",
-        "labels": {
-          "app": "fleet",
-          "pod-template-hash": "8ddd5dfdb"
-        },
-        "containers": [
-          {
-            "name": "nginx",
-            "image": "nginx:alpine"
-          }
-        ],
-        "restarts": 0,
-        "createdAt": "2026-07-02T15:14:47.000Z"
-      },
-      {
-        "name": "fleet-8ddd5dfdb-q84qr",
-        "phase": "Running",
-        "ready": true,
-        "ip": "10.244.0.23",
-        "node": "kubequest-control-plane",
-        "labels": {
-          "app": "fleet",
-          "pod-template-hash": "8ddd5dfdb"
-        },
-        "containers": [
-          {
-            "name": "nginx",
-            "image": "nginx:alpine"
-          }
-        ],
-        "restarts": 0,
-        "createdAt": "2026-07-02T15:14:47.000Z"
-      }
-    ],
-    "deployments": [
-      {
-        "name": "fleet",
-        "replicas": 4,
-        "readyReplicas": 4,
-        "availableReplicas": 4,
-        "images": [
-          "nginx:alpine"
-        ],
-        "labels": {
-          "app": "fleet"
-        }
-      }
-    ],
+    "pods": [],
+    "deployments": [],
     "services": [],
     "configMaps": []
   },
@@ -134,8 +26,8 @@
       "track": "core",
       "goal": "Have a Ready pod named beacon running nginx.",
       "winHint": "pod/beacon is Ready",
-      "met": true,
-      "detail": "beacon: Running Ready"
+      "met": false,
+      "detail": "beacon not found"
     },
     {
       "id": 2,
@@ -144,8 +36,8 @@
       "track": "core",
       "goal": "Create deployment/fleet with 2 Ready replicas (nginx).",
       "winHint": "deploy/fleet 2/2 Ready",
-      "met": true,
-      "detail": "fleet: 4/4 ready (need 2)"
+      "met": false,
+      "detail": "deployment not found"
     },
     {
       "id": 3,
@@ -154,8 +46,8 @@
       "track": "core",
       "goal": "Scale deployment/fleet to 4 Ready replicas.",
       "winHint": "deploy/fleet 4/4 Ready",
-      "met": true,
-      "detail": "fleet: 4/4 ready (need 4)"
+      "met": false,
+      "detail": "deployment not found"
     },
     {
       "id": 4,
@@ -185,7 +77,7 @@
       "goal": "Set deploy/fleet image to nginx:1.27-alpine and have at least one Ready pod.",
       "winHint": "fleet image contains 1.27",
       "met": false,
-      "detail": "images: nginx:alpine, ready: 4"
+      "detail": "deployment not found"
     },
     {
       "id": 7,
