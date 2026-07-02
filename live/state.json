@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-02T15:49:58.678Z",
+  "updatedAt": "2026-07-02T15:50:27.051Z",
   "source": "codespace:opulent-umbrella-wvrwwprpvw7g29qvq",
   "publicApiUrl": "https://opulent-umbrella-wvrwwprpvw7g29qvq-3847.app.github.dev",
   "health": {
@@ -186,40 +186,22 @@
         "createdAt": "2026-07-02T15:31:38.000Z"
       },
       {
-        "name": "kq-curl-mr3ok5f1",
+        "name": "kq-curl-mr3oktgo",
         "phase": "Running",
-        "ready": false,
-        "ip": "10.244.0.75",
+        "ready": true,
+        "ip": "10.244.0.82",
         "node": "kubequest-control-plane",
         "labels": {
           "kq.stack": "probe"
         },
         "containers": [
           {
-            "name": "kq-curl-mr3ok5f1",
+            "name": "kq-curl-mr3oktgo",
             "image": "curlimages/curl:8.5.0"
           }
         ],
         "restarts": 0,
-        "createdAt": "2026-07-02T15:49:42.000Z"
-      },
-      {
-        "name": "kq-curl-mr3ok8dx",
-        "phase": "Pending",
-        "ready": false,
-        "ip": null,
-        "node": "kubequest-control-plane",
-        "labels": {
-          "kq.stack": "probe"
-        },
-        "containers": [
-          {
-            "name": "kq-curl-mr3ok8dx",
-            "image": "curlimages/curl:8.5.0"
-          }
-        ],
-        "restarts": 0,
-        "createdAt": "2026-07-02T15:49:46.000Z"
+        "createdAt": "2026-07-02T15:50:13.000Z"
       },
       {
         "name": "messenger",
