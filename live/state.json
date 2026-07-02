@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-02T15:31:33.848Z",
+  "updatedAt": "2026-07-02T15:31:51.367Z",
   "source": "codespace:opulent-umbrella-wvrwwprpvw7g29qvq",
   "publicApiUrl": "https://opulent-umbrella-wvrwwprpvw7g29qvq-3847.app.github.dev",
   "health": {
@@ -166,6 +166,26 @@
         "createdAt": "2026-07-02T15:30:45.000Z"
       },
       {
+        "name": "jaeger-6d95cffbb4-v4qkd",
+        "phase": "Running",
+        "ready": false,
+        "ip": "10.244.0.39",
+        "node": "kubequest-control-plane",
+        "labels": {
+          "app": "jaeger",
+          "kq.stack": "telemetry",
+          "pod-template-hash": "6d95cffbb4"
+        },
+        "containers": [
+          {
+            "name": "jaeger",
+            "image": "jaegertracing/all-in-one:1.57"
+          }
+        ],
+        "restarts": 0,
+        "createdAt": "2026-07-02T15:31:38.000Z"
+      },
+      {
         "name": "messenger",
         "phase": "Running",
         "ready": true,
@@ -220,6 +240,19 @@
         "labels": {
           "app": "healthy-app"
         }
+      },
+      {
+        "name": "jaeger",
+        "replicas": 1,
+        "readyReplicas": 0,
+        "availableReplicas": 0,
+        "images": [
+          "jaegertracing/all-in-one:1.57"
+        ],
+        "labels": {
+          "app": "jaeger",
+          "kq.stack": "telemetry"
+        }
       }
     ],
     "services": [
@@ -236,6 +269,31 @@
         ],
         "selector": {
           "app": "fleet"
+        }
+      },
+      {
+        "name": "jaeger",
+        "type": "ClusterIP",
+        "clusterIP": "10.96.195.154",
+        "ports": [
+          {
+            "port": 16686,
+            "targetPort": 16686,
+            "protocol": "TCP"
+          },
+          {
+            "port": 4318,
+            "targetPort": 4318,
+            "protocol": "TCP"
+          },
+          {
+            "port": 4317,
+            "targetPort": 4317,
+            "protocol": "TCP"
+          }
+        ],
+        "selector": {
+          "app": "jaeger"
         }
       }
     ],
@@ -337,7 +395,7 @@
       "goal": "Deploy Jaeger, the OTel Collector, and Prometheus in kubequest (all Ready).",
       "winHint": "deploy/jaeger, otel-collector, prometheus are Ready",
       "met": false,
-      "detail": "deployment not found"
+      "detail": "jaeger: 0/1 ready (need 1)"
     },
     {
       "id": 10,
@@ -372,7 +430,7 @@
   ],
   "telemetry": {
     "jaeger": {
-      "ok": false,
+      "ok": true,
       "services": []
     },
     "prometheus": {
