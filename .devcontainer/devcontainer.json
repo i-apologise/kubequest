@@ -12,8 +12,14 @@
       "minikube": "none"
     }
   },
+  "forwardPorts": [3847, 16686, 9090],
+  "portsAttributes": {
+    "3847": { "label": "KubeQuest Live UI", "onAutoForward": "notify" },
+    "16686": { "label": "Jaeger UI", "onAutoForward": "silent" },
+    "9090": { "label": "Prometheus", "onAutoForward": "silent" }
+  },
   "hostRequirements": {
-    "cpus": 2,
+    "cpus": 4,
     "memory": "8gb",
     "storage": "32gb"
   },
@@ -23,8 +29,7 @@
     "vscode": {
       "settings": {
         "terminal.integrated.defaultProfile.linux": "bash"
-      },
-      "extensions": []
+      }
     },
     "codespaces": {
       "openFiles": ["README.md"]

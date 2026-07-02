@@ -1,62 +1,58 @@
 # KubeQuest
 
-Terminal command game: type real `kubectl` commands against a [kind](https://kind.sigs.k8s.io/) cluster. Missions check live cluster state and award XP.
+Learn Kubernetes by typing **real kubectl commands** against a real cluster, with a **live UI** that mirrors cluster state plus OpenTelemetry **traces and metrics**.
 
-## Play free in the cloud (Codespaces)
+## Quick start (Codespaces — recommended)
 
-No Docker on your laptop.
-
-1. Open **https://github.com/i-apologise/kubequest**
-2. **Code → Codespaces → Create codespace on main**
-3. Pick at least **2-core / 8GB** (4-core / 16GB is smoother for kind)
-4. Wait for the devcontainer build + kind bootstrap (first launch ~3–5 min)
-5. In the cloud terminal:
+1. Open https://github.com/i-apologise/kubequest → **Code → Codespaces**
+2. Wait for devcontainer + kind + image build
+3. Run:
 
 ```bash
 npm start
 ```
 
-Suspend or delete the codespace when you stop so you do not burn free core-hours.
+- Terminal: type `kubectl` (game prompt)
+- Browser: open forwarded port **3847** for the live dashboard
 
-| Command | Purpose |
-|---|---|
-| `npm start` | Play |
-| `npm run audit` | Full automated mission e2e |
-| `npm run setup` | Recreate kind cluster if needed |
-
-Devcontainer pieces live in `.devcontainer/` (Docker-in-Docker, kubectl, kind, `npm ci`, auto namespace `kubequest`).
-
-## Play locally (optional)
+## Quick start (local)
 
 ```bash
-npm run setup          # Docker required
-npm ci && npm ci --prefix server
-npm start
+npm run setup          # kind cluster + telemetry image
+npm run install:all
+npm run build:ui
+npm start              # game + dashboard
 ```
 
-## Game commands
+## What you get
 
-Prompt: `kubequest m1 xp:0 $` — type kubectl yourself (`get pods` works without the prefix).
-
-| Input | Meaning |
+| Surface | Purpose |
 |---|---|
-| `goal` | Mission goal + starter commands |
-| `hint` | One spoiler command |
-| `status` | Cluster snapshot |
-| `check` | Claim XP if goal is met |
-| `mission N` | Switch mission |
-| `reset` | Wipe namespace + XP |
-| `help` / `quit` | Help / exit |
+| `npm run game` | Terminal missions — you type kubectl |
+| `npm run dashboard` | Live UI on `:3847` — cluster map, traces, metrics |
+| `npm start` | Both together |
+| `npm run audit` | Automated missions 1–12 on a real cluster |
+
+### Live UI tabs
+- **Cluster** — SSE-updated pods/deployments/services as commands change reality
+- **Traces** — Jaeger query API (`telemetry-api` spans)
+- **Metrics** — Prometheus `kq_http_requests_total` + rate chart
+- **Missions** — goal status for all levels
+
+Game extras: `traffic` (generate in-cluster load), `ui` (print dashboard URL), `check`, `hint`, `goal`.
+
+## Mission tracks
+
+**Core (1–8):** Pod, Deployment, Scale, Service, ConfigMap, Rollout, Probes, Resources
+
+**Telemetry (9–12):**
+9. Deploy Jaeger + OTel Collector + Prometheus  
+10. Deploy instrumented `telemetry-api` (OTLP to collector)  
+11. Generate traffic; verify **live traces** in Jaeger  
+12. Verify **live metrics** in Prometheus  
+
+Sample app: `telemetry-app/` (OpenTelemetry Node SDK). Manifests: `manifests/telemetry/`.
 
 ## CI
 
-GitHub Actions (`.github/workflows/e2e.yml`) boots kind on Ubuntu and runs `npm run audit` on every push/PR.
-
-## Layout
-
-- `game.mjs` — terminal game
-- `server/` — k8s client, kubectl runner, missions
-- `manifests/` — sample YAML for later missions
-- `scripts/e2e-audit.mjs` — automated checks
-- `.devcontainer/` — Codespaces setup
-- `client/` — legacy unused web UI
+GitHub Actions boots kind, builds the telemetry image, builds the UI, runs `npm run audit`.

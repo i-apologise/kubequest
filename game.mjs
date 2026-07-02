@@ -13,8 +13,11 @@ import {
   checkMission,
   resetGame,
   clusterHealth,
+  inClusterCurl,
 } from './server/k8s.js';
 import { prepareKubectl, runKubectl } from './server/kubectl-runner.js';
+
+const DASHBOARD_URL = process.env.DASHBOARD_URL || 'http://localhost:3847';
 
 const require = createRequire(import.meta.url);
 const c = require('chalk');
@@ -98,6 +101,8 @@ ${c.bold('Game commands')} (not sent to the cluster):
   ${c.yellow('missions')}  list missions
   ${c.yellow('mission N')} switch to mission N
   ${c.yellow('reset')}     wipe namespace + XP
+  ${c.yellow('traffic')}   send sample requests to telemetry-api (missions 11–12)
+  ${c.yellow('ui')}        print live dashboard URL
   ${c.yellow('clear')}     clear screen
   ${c.yellow('quit')}      exit
 
@@ -308,7 +313,9 @@ async function main() {
   console.log(c.bold.cyan('\nKUBEQUEST') + c.dim(' — type real kubectl commands on a real cluster\n'));
   console.log(c.white('You write the commands. We execute them in namespace ') + c.cyan(NAMESPACE) + c.white('.'));
   console.log(c.white('Finish the GOAL, then type ') + c.yellow('check') + c.white(' for XP.'));
-  console.log(c.dim('Game cmds: goal · hint · status · check · missions · help · quit\n'));
+  console.log(c.white('Live UI (cluster + traces + metrics): ') + c.cyan(DASHBOARD_URL));
+  console.log(c.dim('Game cmds: goal · hint · status · check · traffic · ui · missions · help · quit\n'));
+  console.log(c.dim('Start the UI in another terminal: npm run dashboard\n'));
 
   const wipe = (await ask(c.dim('Reset namespace for a clean run? [y/N] > '))).trim().toLowerCase();
   if (wipe === 'y' || wipe === 'yes') {
@@ -412,6 +419,21 @@ async function main() {
     }
     if (low === 'history') {
       history.slice(-20).forEach((h) => console.log(c.dim('  ' + h)));
+      continue;
+    }
+    if (low === 'ui' || low === 'dashboard') {
+      console.log(c.cyan(`  Live UI: ${DASHBOARD_URL}`));
+      console.log(c.dim('  Run `npm run dashboard` if it is not already up. In Codespaces, open forwarded port 3847.'));
+      continue;
+    }
+    if (low === 'traffic') {
+      console.log(c.dim('  Sending 5 requests to telemetry-api via in-cluster curl…'));
+      for (let i = 0; i < 5; i++) {
+        const r = await inClusterCurl('http://telemetry-api:8080/api/hello');
+        console.log(r.ok ? c.green(`  ✓ ${r.body.slice(0, 80)}`) : c.red(`  ✖ ${r.error || r.phase}`));
+      }
+      console.log(c.dim('  Wait a few seconds, open the UI Traces/Metrics tabs, then type check.'));
+      await showStatus(mission);
       continue;
     }
 

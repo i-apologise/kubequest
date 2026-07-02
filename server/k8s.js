@@ -181,6 +181,58 @@ export async function checkMission(mission) {
     }
   }
 
+
+
+  if (mission.extraCheck === 'telemetryStack') {
+    for (const name of mission.stackDeployments || ['jaeger', 'otel-collector', 'prometheus']) {
+      const c = await checkWinCondition({ type: 'deploymentReady', name, replicas: 1 });
+      if (!c.met) return { met: false, detail: c.detail };
+    }
+    return { met: true, detail: 'telemetry stack deployments Ready' };
+  }
+  if (mission.extraCheck === 'jaegerServices') {
+    const r = await inClusterCurl('http://jaeger:16686/api/services');
+    if (!r.ok) return { met: false, detail: `jaeger query not reachable (${r.error || r.phase || 'no body'})` };
+    try {
+      const data = JSON.parse(r.body);
+      const services = data.data || [];
+      return services.length
+        ? { met: true, detail: `jaeger services: ${services.join(', ')}` }
+        : { met: false, detail: 'jaeger is up but reports zero services yet' };
+    } catch {
+      return { met: false, detail: 'jaeger returned non-JSON' };
+    }
+  }
+
+  if (mission.extraCheck === 'jaegerHasTraces') {
+    const svc = mission.traceService || 'telemetry-api';
+    const r = await inClusterCurl(`http://jaeger:16686/api/traces?service=${encodeURIComponent(svc)}&limit=5`);
+    if (!r.ok) return { met: false, detail: `cannot query jaeger traces (${r.error || r.phase})` };
+    try {
+      const data = JSON.parse(r.body);
+      const traces = data.data || [];
+      if (!traces.length) return { met: false, detail: `no traces for service ${svc} yet — hit /api/hello and wait a few seconds` };
+      return { met: true, detail: `${traces.length} trace(s) for ${svc}` };
+    } catch {
+      return { met: false, detail: 'jaeger traces response not JSON' };
+    }
+  }
+
+  if (mission.extraCheck === 'prometheusMetric') {
+    const q = mission.promQuery || 'kq_http_requests_total';
+    const r = await inClusterCurl(`http://prometheus:9090/api/v1/query?query=${encodeURIComponent(q)}`);
+    if (!r.ok) return { met: false, detail: `prometheus not reachable (${r.error || r.phase})` };
+    try {
+      const data = JSON.parse(r.body);
+      const results = data?.data?.result || [];
+      if (data.status !== 'success') return { met: false, detail: 'prometheus query failed' };
+      if (!results.length) return { met: false, detail: `metric ${q} has no series yet — generate traffic` };
+      return { met: true, detail: `${q}: ${results.length} series` };
+    } catch {
+      return { met: false, detail: 'prometheus returned non-JSON' };
+    }
+  }
+
   return base;
 }
 
@@ -491,4 +543,48 @@ export async function clusterHealth() {
   } catch (e) {
     return { connected: false, error: e.message };
   }
+}
+
+/** Run a short-lived in-cluster curl and return stdout. */
+export async function inClusterCurl(url, { timeoutSec = 30 } = {}) {
+  const name = `kq-curl-${Date.now().toString(36)}`;
+  const create = await import('./kubectl-runner.js').then((m) =>
+    m.runKubectl(
+      [
+        'run',
+        name,
+        '-n',
+        NAMESPACE,
+        '--restart=Never',
+        '--image=curlimages/curl:8.5.0',
+        '--labels=kq.stack=probe',
+        '--command',
+        '--',
+        'curl',
+        '-sf',
+        '--max-time',
+        '10',
+        url,
+      ],
+      30000
+    )
+  );
+  if (create.code !== 0 && !/created/i.test(create.stdout + create.stderr)) {
+    return { ok: false, body: '', error: create.stderr || create.stdout };
+  }
+  const { runKubectl } = await import('./kubectl-runner.js');
+  let phase = '';
+  for (let i = 0; i < timeoutSec; i++) {
+    const st = await runKubectl(
+      ['get', 'pod', name, '-n', NAMESPACE, '-o', 'jsonpath={.status.phase}'],
+      15000
+    );
+    phase = (st.stdout || '').trim();
+    if (phase === 'Succeeded' || phase === 'Failed') break;
+    await sleep(1000);
+  }
+  const logs = await runKubectl(['logs', name, '-n', NAMESPACE], 15000);
+  await runKubectl(['delete', 'pod', name, '-n', NAMESPACE, '--ignore-not-found'], 15000);
+  const body = (logs.stdout || '').trim();
+  return { ok: phase === 'Succeeded' && body.length > 0, body, phase, error: logs.stderr || '' };
 }

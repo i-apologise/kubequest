@@ -1,0 +1,2 @@
+# Apply order: jaeger -> otel-collector -> prometheus -> telemetry-api
+# All resources target namespace kubequest (set via kubectl -n or manifest metadata).

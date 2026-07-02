@@ -3,12 +3,12 @@ cat <<'MOTD'
 
   KUBEQUEST on GitHub Codespaces
   ------------------------------
-  Cluster and deps are prepared on start.
+    npm start          game terminal + live UI on port 3847
+    npm run game       terminal only
+    npm run dashboard  UI only
+    npm run audit      full e2e missions 1–12
 
-    npm start     play the game (type real kubectl)
-    npm run audit run full mission e2e checks
-
-  Stop/suspend the codespace when you finish to save free hours.
-  Machine size: prefer 4-core / 16GB if kind feels slow.
+  Open forwarded port 3847 for the live cluster/traces/metrics UI.
+  Suspend the codespace when idle to save free hours.
 
 MOTD

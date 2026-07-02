@@ -13,3 +13,5 @@ coverage/
 dist/
 client/dist/
 .kubequest-progress.json
+dashboard/dist/
+telemetry-app/node_modules/

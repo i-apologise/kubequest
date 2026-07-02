@@ -9,8 +9,14 @@ import {
   checkMission,
   clusterHealth,
   getClusterSnapshot,
+  inClusterCurl,
 } from '../server/k8s.js';
 import { prepareKubectl, runKubectl } from '../server/kubectl-runner.js';
+import { spawnSync } from 'node:child_process';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 let failed = 0;
@@ -130,6 +136,13 @@ async function playAll() {
   await resetGame();
   ok('namespace reset');
 
+  log('\n=== build telemetry image ===');
+  {
+    const r = spawnSync('npm', ['run', 'build:telemetry'], { cwd: ROOT, encoding: 'utf8' });
+    if (r.status !== 0) fail(`build:telemetry failed: ${r.stderr || r.stdout}`);
+    else ok('telemetry image built/loaded');
+  }
+
   const steps = [
     {
       missionId: 1,
@@ -191,17 +204,52 @@ async function playAll() {
         'kubectl get deploy bounded-app',
       ],
     },
+    {
+      missionId: 9,
+      timeoutMs: 180000,
+      commands: [
+        'kubectl apply -f manifests/telemetry/jaeger.yaml',
+        'kubectl apply -f manifests/telemetry/otel-collector-config.yaml',
+        'kubectl apply -f manifests/telemetry/otel-collector.yaml',
+        'kubectl apply -f manifests/telemetry/prometheus.yaml',
+      ],
+    },
+    {
+      missionId: 10,
+      timeoutMs: 180000,
+      commands: ['kubectl apply -f manifests/telemetry/telemetry-api.yaml'],
+    },
+    {
+      missionId: 11,
+      timeoutMs: 180000,
+      traffic: 8,
+      commands: [],
+    },
+    {
+      missionId: 12,
+      timeoutMs: 180000,
+      traffic: 5,
+      commands: [],
+    },
   ];
 
   for (const step of steps) {
     const m = missions.find((x) => x.id === step.missionId);
     log(`\n=== mission ${m.id}: ${m.title} ===`);
+    if (step.pre) await step.pre();
     for (const cmd of step.commands) {
       await mustRun(cmd, {
         allowFail: cmd.includes('--ignore-not-found'),
       });
     }
-    const chk = await waitReady(m);
+    if (step.traffic) {
+      for (let i = 0; i < step.traffic; i++) {
+        const r = await inClusterCurl('http://telemetry-api:8080/api/hello');
+        log(r.ok ? `  traffic ok: ${r.body.slice(0, 60)}` : `  traffic fail: ${r.error || r.phase}`);
+      }
+      await sleep(8000);
+    }
+    const chk = await waitReady(m, step.timeoutMs || 120000);
     if (chk.met) ok(`checkMission passed: ${chk.detail}`);
     else fail(`mission ${m.id} not met: ${chk.detail}`);
 
