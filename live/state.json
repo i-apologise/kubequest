@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-02T15:31:16.392Z",
+  "updatedAt": "2026-07-02T15:31:33.848Z",
   "source": "codespace:opulent-umbrella-wvrwwprpvw7g29qvq",
   "publicApiUrl": "https://opulent-umbrella-wvrwwprpvw7g29qvq-3847.app.github.dev",
   "health": {
@@ -31,6 +31,25 @@
         ],
         "restarts": 0,
         "createdAt": "2026-07-02T15:19:46.000Z"
+      },
+      {
+        "name": "bounded-app-54d8544b95-88lwn",
+        "phase": "Running",
+        "ready": true,
+        "ip": "10.244.0.38",
+        "node": "kubequest-control-plane",
+        "labels": {
+          "app": "bounded-app",
+          "pod-template-hash": "54d8544b95"
+        },
+        "containers": [
+          {
+            "name": "nginx",
+            "image": "nginx:alpine"
+          }
+        ],
+        "restarts": 0,
+        "createdAt": "2026-07-02T15:31:18.000Z"
       },
       {
         "name": "fleet-779c87d667-5kwbc",
@@ -167,6 +186,18 @@
     ],
     "deployments": [
       {
+        "name": "bounded-app",
+        "replicas": 1,
+        "readyReplicas": 1,
+        "availableReplicas": 1,
+        "images": [
+          "nginx:alpine"
+        ],
+        "labels": {
+          "app": "bounded-app"
+        }
+      },
+      {
         "name": "fleet",
         "replicas": 4,
         "readyReplicas": 4,
@@ -295,8 +326,8 @@
       "track": "core",
       "goal": "Create deployment bounded-app (1 replica, nginx) with CPU/memory requests AND limits set.",
       "winHint": "deploy/bounded-app 1/1 Ready with resources",
-      "met": false,
-      "detail": "deployment not found"
+      "met": true,
+      "detail": "bounded-app: 1/1 ready (need 1)"
     },
     {
       "id": 9,
