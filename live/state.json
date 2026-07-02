@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-02T15:03:53.259Z",
+  "updatedAt": "2026-07-02T15:04:10.713Z",
   "source": "codespace:opulent-umbrella-wvrwwprpvw7g29qvq",
   "publicApiUrl": "https://opulent-umbrella-wvrwwprpvw7g29qvq-3847.app.github.dev",
   "health": {
@@ -13,7 +13,26 @@
   },
   "cluster": {
     "namespace": "kubequest",
-    "pods": [],
+    "pods": [
+      {
+        "name": "kq-curl-mr3mxjl3",
+        "phase": "Pending",
+        "ready": false,
+        "ip": null,
+        "node": "kubequest-control-plane",
+        "labels": {
+          "kq.stack": "probe"
+        },
+        "containers": [
+          {
+            "name": "kq-curl-mr3mxjl3",
+            "image": "curlimages/curl:8.5.0"
+          }
+        ],
+        "restarts": 0,
+        "createdAt": "2026-07-02T15:04:08.000Z"
+      }
+    ],
     "deployments": [],
     "services": [],
     "configMaps": []
