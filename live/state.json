@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-02T16:16:59.664Z",
+  "updatedAt": "2026-07-02T16:17:20.682Z",
   "source": "codespace:opulent-umbrella-wvrwwprpvw7g29qvq",
   "publicApiUrl": "https://opulent-umbrella-wvrwwprpvw7g29qvq-3847.app.github.dev",
   "health": {
@@ -634,70 +634,88 @@
   },
   "traces": [
     {
-      "traceID": "bcd2f5f06a72891216397581adbec3a3",
+      "traceID": "c8129d787a4a1dc54d2123fe07a0b061",
       "spans": 1,
       "rootOperation": "GET",
-      "durationUs": 771,
+      "durationUs": 700,
       "services": [
         "telemetry-api"
       ]
     },
     {
-      "traceID": "a9d18db826d7129523eeef59f74f09e4",
+      "traceID": "b64d2c846b11b2d99d4e9c80647b9324",
       "spans": 1,
       "rootOperation": "GET",
-      "durationUs": 876,
+      "durationUs": 3309,
       "services": [
         "telemetry-api"
       ]
     },
     {
-      "traceID": "bb375339456fdb5fc3acfa7b5cab19b4",
+      "traceID": "3eac34946f35c615fab6c1560d502731",
       "spans": 1,
       "rootOperation": "GET",
-      "durationUs": 728,
+      "durationUs": 6356,
       "services": [
         "telemetry-api"
       ]
     },
     {
-      "traceID": "fcd2b24af99ee5fad708e7a4efeb5f82",
+      "traceID": "2cdffb0e5299c740efe34323497ac5e8",
       "spans": 1,
       "rootOperation": "GET",
-      "durationUs": 3217,
+      "durationUs": 2555,
       "services": [
         "telemetry-api"
       ]
     },
     {
-      "traceID": "aaec76a12316d6325da77da84609ac71",
+      "traceID": "e14c839c72738e278c09b03e62e9c539",
       "spans": 1,
       "rootOperation": "GET",
-      "durationUs": 729,
+      "durationUs": 683,
       "services": [
         "telemetry-api"
       ]
     },
     {
-      "traceID": "4f920443eb648e98019fdd4a412dc757",
+      "traceID": "585fd5ce38c9916ea0cfe780f7413ade",
       "spans": 1,
       "rootOperation": "GET",
-      "durationUs": 705,
+      "durationUs": 671,
       "services": [
         "telemetry-api"
       ]
     },
     {
-      "traceID": "d507f7c27cdbb03ef61372bfff19d4eb",
+      "traceID": "f71b5ac6924c8dafaa769f9e21e38e33",
       "spans": 1,
       "rootOperation": "GET",
-      "durationUs": 662,
+      "durationUs": 671,
       "services": [
         "telemetry-api"
       ]
     },
     {
-      "traceID": "7f76b3b211298ca92467729409aeac79",
+      "traceID": "56936a8d0acad9a3431f3e3e0d7f9489",
+      "spans": 1,
+      "rootOperation": "GET",
+      "durationUs": 730,
+      "services": [
+        "telemetry-api"
+      ]
+    },
+    {
+      "traceID": "fb4880aa32e575c440ca73121c92b2dd",
+      "spans": 1,
+      "rootOperation": "GET",
+      "durationUs": 726,
+      "services": [
+        "telemetry-api"
+      ]
+    },
+    {
+      "traceID": "959c1f8f039e6fe1f45ff8c46411bb27",
       "spans": 1,
       "rootOperation": "GET",
       "durationUs": 670,
@@ -706,64 +724,46 @@
       ]
     },
     {
-      "traceID": "972cbd21f32c5f99027754ccd70d484c",
+      "traceID": "e85ec400d57c3a3e8ead85679c41e18f",
       "spans": 1,
       "rootOperation": "GET",
-      "durationUs": 638,
+      "durationUs": 718,
       "services": [
         "telemetry-api"
       ]
     },
     {
-      "traceID": "5be0952dcc4f47ff568c95829abc3600",
+      "traceID": "f348fa7168cf87ab6163d5f505ffd418",
       "spans": 1,
       "rootOperation": "GET",
-      "durationUs": 632,
+      "durationUs": 676,
       "services": [
         "telemetry-api"
       ]
     },
     {
-      "traceID": "d001845c1b48f42e00417b9652fb0293",
+      "traceID": "8a2da6a064a884c24b06bf4baa16d90b",
       "spans": 1,
       "rootOperation": "GET",
-      "durationUs": 663,
+      "durationUs": 584,
       "services": [
         "telemetry-api"
       ]
     },
     {
-      "traceID": "d79ae32df284a7b1cb7839dc64a5a6ba",
+      "traceID": "254e441bc43474190d1b43d8fafd8667",
       "spans": 1,
       "rootOperation": "GET",
-      "durationUs": 698,
+      "durationUs": 868,
       "services": [
         "telemetry-api"
       ]
     },
     {
-      "traceID": "6580fcf9680fcd7eb3c9ab7c246a21ff",
+      "traceID": "9e045c949f51636f3a32167642bdf7cf",
       "spans": 1,
       "rootOperation": "GET",
-      "durationUs": 971,
-      "services": [
-        "telemetry-api"
-      ]
-    },
-    {
-      "traceID": "3501ebd59c783479a56eae185d1bf8c8",
-      "spans": 1,
-      "rootOperation": "GET",
-      "durationUs": 830,
-      "services": [
-        "telemetry-api"
-      ]
-    },
-    {
-      "traceID": "c8129d787a4a1dc54d2123fe07a0b061",
-      "spans": 1,
-      "rootOperation": "GET",
-      "durationUs": 700,
+      "durationUs": 665,
       "services": [
         "telemetry-api"
       ]
@@ -799,7 +799,7 @@
             "telemetry_sdk_version": "1.30.1"
           },
           "value": [
-            1783009016.043,
+            1783009037.057,
             "1"
           ]
         }
