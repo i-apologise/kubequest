@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-02T15:50:27.051Z",
+  "updatedAt": "2026-07-02T15:50:49.541Z",
   "source": "codespace:opulent-umbrella-wvrwwprpvw7g29qvq",
   "publicApiUrl": "https://opulent-umbrella-wvrwwprpvw7g29qvq-3847.app.github.dev",
   "health": {
@@ -186,24 +186,6 @@
         "createdAt": "2026-07-02T15:31:38.000Z"
       },
       {
-        "name": "kq-curl-mr3oktgo",
-        "phase": "Running",
-        "ready": true,
-        "ip": "10.244.0.82",
-        "node": "kubequest-control-plane",
-        "labels": {
-          "kq.stack": "probe"
-        },
-        "containers": [
-          {
-            "name": "kq-curl-mr3oktgo",
-            "image": "curlimages/curl:8.5.0"
-          }
-        ],
-        "restarts": 0,
-        "createdAt": "2026-07-02T15:50:13.000Z"
-      },
-      {
         "name": "messenger",
         "phase": "Running",
         "ready": true,
@@ -260,6 +242,46 @@
         ],
         "restarts": 0,
         "createdAt": "2026-07-02T15:47:22.000Z"
+      },
+      {
+        "name": "telemetry-api-657474d76b-57blc",
+        "phase": "Running",
+        "ready": true,
+        "ip": "10.244.0.86",
+        "node": "kubequest-control-plane",
+        "labels": {
+          "app": "telemetry-api",
+          "kq.stack": "telemetry",
+          "pod-template-hash": "657474d76b"
+        },
+        "containers": [
+          {
+            "name": "api",
+            "image": "kubequest-telemetry-api:local"
+          }
+        ],
+        "restarts": 0,
+        "createdAt": "2026-07-02T15:50:31.000Z"
+      },
+      {
+        "name": "telemetry-api-657474d76b-hd2wx",
+        "phase": "Running",
+        "ready": true,
+        "ip": "10.244.0.85",
+        "node": "kubequest-control-plane",
+        "labels": {
+          "app": "telemetry-api",
+          "kq.stack": "telemetry",
+          "pod-template-hash": "657474d76b"
+        },
+        "containers": [
+          {
+            "name": "api",
+            "image": "kubequest-telemetry-api:local"
+          }
+        ],
+        "restarts": 0,
+        "createdAt": "2026-07-02T15:50:31.000Z"
       }
     ],
     "deployments": [
@@ -335,6 +357,19 @@
         ],
         "labels": {
           "app": "prometheus",
+          "kq.stack": "telemetry"
+        }
+      },
+      {
+        "name": "telemetry-api",
+        "replicas": 2,
+        "readyReplicas": 2,
+        "availableReplicas": 2,
+        "images": [
+          "kubequest-telemetry-api:local"
+        ],
+        "labels": {
+          "app": "telemetry-api",
           "kq.stack": "telemetry"
         }
       }
@@ -418,6 +453,21 @@
         ],
         "selector": {
           "app": "prometheus"
+        }
+      },
+      {
+        "name": "telemetry-api",
+        "type": "ClusterIP",
+        "clusterIP": "10.96.83.202",
+        "ports": [
+          {
+            "port": 8080,
+            "targetPort": 8080,
+            "protocol": "TCP"
+          }
+        ],
+        "selector": {
+          "app": "telemetry-api"
         }
       }
     ],
@@ -540,8 +590,8 @@
       "track": "telemetry",
       "goal": "Deploy telemetry-api (2 Ready replicas) configured to send OTLP to otel-collector:4318.",
       "winHint": "deploy/telemetry-api 2/2 Ready",
-      "met": false,
-      "detail": "deployment not found"
+      "met": true,
+      "detail": "telemetry-api: 2/2 ready (need 2)"
     },
     {
       "id": 11,
@@ -550,8 +600,8 @@
       "track": "telemetry",
       "goal": "Generate traffic so Jaeger has traces for service telemetry-api.",
       "winHint": "jaeger has traces for telemetry-api",
-      "met": false,
-      "detail": "deployment not found"
+      "met": true,
+      "detail": "4 trace(s) for telemetry-api"
     },
     {
       "id": 12,
@@ -575,7 +625,10 @@
       "ok": true
     },
     "telemetryApi": {
-      "ok": false
+      "ok": true,
+      "body": {
+        "ok": true
+      }
     }
   },
   "traces": [],
