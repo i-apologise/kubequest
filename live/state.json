@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-02T15:29:31.669Z",
+  "updatedAt": "2026-07-02T15:29:49.072Z",
   "source": "codespace:opulent-umbrella-wvrwwprpvw7g29qvq",
   "publicApiUrl": "https://opulent-umbrella-wvrwwprpvw7g29qvq-3847.app.github.dev",
   "health": {
@@ -107,6 +107,24 @@
         ],
         "restarts": 0,
         "createdAt": "2026-07-02T15:20:19.000Z"
+      },
+      {
+        "name": "messenger",
+        "phase": "Running",
+        "ready": true,
+        "ip": "10.244.0.31",
+        "node": "kubequest-control-plane",
+        "labels": {
+          "app": "messenger"
+        },
+        "containers": [
+          {
+            "name": "messenger",
+            "image": "busybox:1.36"
+          }
+        ],
+        "restarts": 0,
+        "createdAt": "2026-07-02T15:29:37.000Z"
       }
     ],
     "deployments": [
@@ -197,8 +215,8 @@
       "track": "core",
       "goal": "Create configmap quest-config (key MESSAGE) and a Ready pod messenger whose MESSAGE env comes from that configmap.",
       "winHint": "pod/messenger Ready and MESSAGE from cm/quest-config",
-      "met": false,
-      "detail": "messenger not found"
+      "met": true,
+      "detail": "messenger: Running Ready"
     },
     {
       "id": 6,
