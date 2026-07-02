@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-02T15:30:06.515Z",
+  "updatedAt": "2026-07-02T15:30:23.973Z",
   "source": "codespace:opulent-umbrella-wvrwwprpvw7g29qvq",
   "publicApiUrl": "https://opulent-umbrella-wvrwwprpvw7g29qvq-3847.app.github.dev",
   "health": {
@@ -33,28 +33,85 @@
         "createdAt": "2026-07-02T15:19:46.000Z"
       },
       {
-        "name": "fleet-8ddd5dfdb-2xb7z",
+        "name": "fleet-779c87d667-5kwbc",
         "phase": "Running",
         "ready": true,
-        "ip": "10.244.0.29",
+        "ip": "10.244.0.33",
         "node": "kubequest-control-plane",
         "labels": {
           "app": "fleet",
-          "pod-template-hash": "8ddd5dfdb"
+          "pod-template-hash": "779c87d667"
         },
         "containers": [
           {
             "name": "nginx",
-            "image": "nginx:alpine"
+            "image": "nginx:1.27-alpine"
           }
         ],
         "restarts": 0,
-        "createdAt": "2026-07-02T15:20:30.000Z"
+        "createdAt": "2026-07-02T15:30:17.000Z"
+      },
+      {
+        "name": "fleet-779c87d667-87g2q",
+        "phase": "Running",
+        "ready": true,
+        "ip": "10.244.0.32",
+        "node": "kubequest-control-plane",
+        "labels": {
+          "app": "fleet",
+          "pod-template-hash": "779c87d667"
+        },
+        "containers": [
+          {
+            "name": "nginx",
+            "image": "nginx:1.27-alpine"
+          }
+        ],
+        "restarts": 0,
+        "createdAt": "2026-07-02T15:30:17.000Z"
+      },
+      {
+        "name": "fleet-779c87d667-kkcxj",
+        "phase": "Pending",
+        "ready": false,
+        "ip": null,
+        "node": "kubequest-control-plane",
+        "labels": {
+          "app": "fleet",
+          "pod-template-hash": "779c87d667"
+        },
+        "containers": [
+          {
+            "name": "nginx",
+            "image": "nginx:1.27-alpine"
+          }
+        ],
+        "restarts": 0,
+        "createdAt": "2026-07-02T15:30:20.000Z"
+      },
+      {
+        "name": "fleet-779c87d667-ntc4l",
+        "phase": "Running",
+        "ready": true,
+        "ip": "10.244.0.34",
+        "node": "kubequest-control-plane",
+        "labels": {
+          "app": "fleet",
+          "pod-template-hash": "779c87d667"
+        },
+        "containers": [
+          {
+            "name": "nginx",
+            "image": "nginx:1.27-alpine"
+          }
+        ],
+        "restarts": 0,
+        "createdAt": "2026-07-02T15:30:18.000Z"
       },
       {
         "name": "fleet-8ddd5dfdb-6bnbv",
-        "phase": "Running",
-        "ready": true,
+        "phase": "Succeeded",
+        "ready": false,
         "ip": "10.244.0.30",
         "node": "kubequest-control-plane",
         "labels": {
@@ -69,44 +126,6 @@
         ],
         "restarts": 0,
         "createdAt": "2026-07-02T15:20:30.000Z"
-      },
-      {
-        "name": "fleet-8ddd5dfdb-9qbnw",
-        "phase": "Running",
-        "ready": true,
-        "ip": "10.244.0.28",
-        "node": "kubequest-control-plane",
-        "labels": {
-          "app": "fleet",
-          "pod-template-hash": "8ddd5dfdb"
-        },
-        "containers": [
-          {
-            "name": "nginx",
-            "image": "nginx:alpine"
-          }
-        ],
-        "restarts": 0,
-        "createdAt": "2026-07-02T15:20:19.000Z"
-      },
-      {
-        "name": "fleet-8ddd5dfdb-qknbs",
-        "phase": "Running",
-        "ready": true,
-        "ip": "10.244.0.27",
-        "node": "kubequest-control-plane",
-        "labels": {
-          "app": "fleet",
-          "pod-template-hash": "8ddd5dfdb"
-        },
-        "containers": [
-          {
-            "name": "nginx",
-            "image": "nginx:alpine"
-          }
-        ],
-        "restarts": 0,
-        "createdAt": "2026-07-02T15:20:19.000Z"
       },
       {
         "name": "messenger",
@@ -131,10 +150,10 @@
       {
         "name": "fleet",
         "replicas": 4,
-        "readyReplicas": 4,
-        "availableReplicas": 4,
+        "readyReplicas": 3,
+        "availableReplicas": 3,
         "images": [
-          "nginx:alpine"
+          "nginx:1.27-alpine"
         ],
         "labels": {
           "app": "fleet"
@@ -186,7 +205,7 @@
       "goal": "Create deployment/fleet with 2 Ready replicas (nginx).",
       "winHint": "deploy/fleet 2/2 Ready",
       "met": true,
-      "detail": "fleet: 4/4 ready (need 2)"
+      "detail": "fleet: 3/4 ready (need 2)"
     },
     {
       "id": 3,
@@ -195,8 +214,8 @@
       "track": "core",
       "goal": "Scale deployment/fleet to 4 Ready replicas.",
       "winHint": "deploy/fleet 4/4 Ready",
-      "met": true,
-      "detail": "fleet: 4/4 ready (need 4)"
+      "met": false,
+      "detail": "fleet: 3/4 ready (need 4)"
     },
     {
       "id": 4,
@@ -225,8 +244,8 @@
       "track": "core",
       "goal": "Set deploy/fleet image to nginx:1.27-alpine and have at least one Ready pod.",
       "winHint": "fleet image contains 1.27",
-      "met": false,
-      "detail": "images: nginx:alpine, ready: 4"
+      "met": true,
+      "detail": "images: nginx:1.27-alpine, ready: 3"
     },
     {
       "id": 7,
