@@ -294,18 +294,24 @@ async function buildSnapshot() {
 async function mirrorSnapshotLoop() {
   const token = process.env.GH_TOKEN || process.env.GITHUB_TOKEN;
   const repo = process.env.GITHUB_REPOSITORY || 'i-apologise/kubequest';
+  const verbose = process.env.MIRROR_VERBOSE === '1';
+  const log = (...args) => {
+    if (verbose) console.log(...args);
+  };
   if (!token) {
-    console.log('  (mirror off — set GH_TOKEN to publish live/state.json for GitHub Pages)');
+    console.log('  (mirror off — no GITHUB_TOKEN)');
     return;
   }
+  console.log('  mirror on (quiet; set MIRROR_VERBOSE=1 for per-snapshot logs)');
   let lastSha = null;
   let lastPayload = '';
+  let failures = 0;
   for (;;) {
     try {
       const snap = await buildSnapshot();
       const payload = JSON.stringify(snap, null, 2) + '\n';
       if (payload === lastPayload) {
-        await new Promise((r) => setTimeout(r, 15000));
+        await new Promise((r) => setTimeout(r, Number(process.env.MIRROR_INTERVAL_MS || 15000)));
         continue;
       }
       lastPayload = payload;
@@ -330,18 +336,27 @@ async function mirrorSnapshotLoop() {
         branch: process.env.MIRROR_BRANCH || 'main',
       };
       if (lastSha) body.sha = lastSha;
-      const put = await fetch(metaUrl, { method: 'PUT', headers: { ...headers, 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+      const put = await fetch(metaUrl, {
+        method: 'PUT',
+        headers: { ...headers, 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
       if (put.ok) {
         const saved = await put.json();
         lastSha = saved.content?.sha || lastSha;
-        console.log(`  mirrored snapshot @ ${snap.updatedAt}`);
+        failures = 0;
+        log(`  mirrored snapshot @ ${snap.updatedAt}`);
       } else {
         const err = await put.text();
-        console.log(`  mirror failed: ${put.status} ${err.slice(0, 200)}`);
+        failures += 1;
+        if (failures <= 2 || verbose) {
+          console.log(`  mirror failed: ${put.status} ${err.slice(0, 200)}`);
+        }
         lastSha = null;
       }
     } catch (e) {
-      console.log(`  mirror error: ${e.message}`);
+      failures += 1;
+      if (failures <= 2 || verbose) console.log(`  mirror error: ${e.message}`);
     }
     await new Promise((r) => setTimeout(r, Number(process.env.MIRROR_INTERVAL_MS || 15000)));
   }
