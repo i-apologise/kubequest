@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-02T15:47:09.157Z",
+  "updatedAt": "2026-07-02T15:47:26.859Z",
   "source": "codespace:opulent-umbrella-wvrwwprpvw7g29qvq",
   "publicApiUrl": "https://opulent-umbrella-wvrwwprpvw7g29qvq-3847.app.github.dev",
   "health": {
@@ -222,6 +222,26 @@
         ],
         "restarts": 0,
         "createdAt": "2026-07-02T15:35:38.000Z"
+      },
+      {
+        "name": "prometheus-78d98949df-glslq",
+        "phase": "Pending",
+        "ready": false,
+        "ip": null,
+        "node": "kubequest-control-plane",
+        "labels": {
+          "app": "prometheus",
+          "kq.stack": "telemetry",
+          "pod-template-hash": "78d98949df"
+        },
+        "containers": [
+          {
+            "name": "prometheus",
+            "image": "prom/prometheus:v2.51.2"
+          }
+        ],
+        "restarts": 0,
+        "createdAt": "2026-07-02T15:47:22.000Z"
       }
     ],
     "deployments": [
@@ -284,6 +304,19 @@
         ],
         "labels": {
           "app": "otel-collector",
+          "kq.stack": "telemetry"
+        }
+      },
+      {
+        "name": "prometheus",
+        "replicas": 1,
+        "readyReplicas": 0,
+        "availableReplicas": 0,
+        "images": [
+          "prom/prometheus:v2.51.2"
+        ],
+        "labels": {
+          "app": "prometheus",
           "kq.stack": "telemetry"
         }
       }
@@ -353,6 +386,21 @@
         "selector": {
           "app": "otel-collector"
         }
+      },
+      {
+        "name": "prometheus",
+        "type": "ClusterIP",
+        "clusterIP": "10.96.3.112",
+        "ports": [
+          {
+            "port": 9090,
+            "targetPort": 9090,
+            "protocol": "TCP"
+          }
+        ],
+        "selector": {
+          "app": "prometheus"
+        }
       }
     ],
     "configMaps": [
@@ -360,6 +408,12 @@
         "name": "otel-collector-config",
         "dataKeys": [
           "config.yaml"
+        ]
+      },
+      {
+        "name": "prometheus-config",
+        "dataKeys": [
+          "prometheus.yml"
         ]
       },
       {
@@ -459,7 +513,7 @@
       "goal": "Deploy Jaeger, the OTel Collector, and Prometheus in kubequest (all Ready).",
       "winHint": "deploy/jaeger, otel-collector, prometheus are Ready",
       "met": false,
-      "detail": "deployment not found"
+      "detail": "prometheus: 0/1 ready (need 1)"
     },
     {
       "id": 10,
@@ -489,7 +543,7 @@
       "goal": "Prometheus has series for kq_http_requests_total.",
       "winHint": "prometheus query kq_http_requests_total returns series",
       "met": false,
-      "detail": "deployment not found"
+      "detail": "prometheus: 0/1 ready (need 1)"
     }
   ],
   "telemetry": {
