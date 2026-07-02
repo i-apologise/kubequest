@@ -15,9 +15,9 @@
     "start:all": "concurrently -n game,ui -c cyan,magenta \"npm run game\" \"npm run dashboard\"",
     "start:ui": "npm run dashboard",
     "play": "node game.mjs",
-    "play": "node game.mjs",
     "dev:ui": "npm run dev --prefix dashboard",
-    "audit": "node scripts/e2e-audit.mjs"
+    "audit": "node scripts/e2e-audit.mjs",
+    "free:ui": "bash scripts/free-dashboard-port.sh 3847"
   },
   "devDependencies": {
     "concurrently": "^9.1.2"

@@ -386,6 +386,12 @@ const server = app.listen(PORT, HOST, async () => {
 
 server.on('error', (err) => {
   console.error(`Failed to bind ${HOST}:${PORT}:`, err.message);
+  if (err.code === 'EADDRINUSE') {
+    console.error(`  Port ${PORT} is already taken (old dashboard still running).`);
+    console.error('  Fix:  npm run free:ui');
+    console.error('  Then: npm run dashboard');
+    console.error('  Play in another terminal with: npm start');
+  }
   process.exit(1);
 });
 
