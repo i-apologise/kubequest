@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-02T15:52:31.316Z",
+  "updatedAt": "2026-07-02T15:52:59.651Z",
   "source": "codespace:opulent-umbrella-wvrwwprpvw7g29qvq",
   "publicApiUrl": "https://opulent-umbrella-wvrwwprpvw7g29qvq-3847.app.github.dev",
   "health": {
@@ -186,25 +186,25 @@
         "createdAt": "2026-07-02T15:31:38.000Z"
       },
       {
-        "name": "kq-curl-mr3onhn9",
-        "phase": "Pending",
+        "name": "kq-curl-mr3oo19p",
+        "phase": "Succeeded",
         "ready": false,
-        "ip": null,
+        "ip": "10.244.0.150",
         "node": "kubequest-control-plane",
         "labels": {
           "kq.stack": "probe"
         },
         "containers": [
           {
-            "name": "kq-curl-mr3onhn9",
+            "name": "kq-curl-mr3oo19p",
             "image": "curlimages/curl:8.5.0"
           }
         ],
         "restarts": 0,
-        "createdAt": "2026-07-02T15:52:18.000Z"
+        "createdAt": "2026-07-02T15:52:43.000Z"
       },
       {
-        "name": "kq-curl-mr3onhrb",
+        "name": "kq-curl-mr3oo2sj",
         "phase": "Pending",
         "ready": false,
         "ip": null,
@@ -214,12 +214,48 @@
         },
         "containers": [
           {
-            "name": "kq-curl-mr3onhrb",
+            "name": "kq-curl-mr3oo2sj",
             "image": "curlimages/curl:8.5.0"
           }
         ],
         "restarts": 0,
-        "createdAt": "2026-07-02T15:52:18.000Z"
+        "createdAt": "2026-07-02T15:52:46.000Z"
+      },
+      {
+        "name": "kq-curl-mr3oo4by",
+        "phase": "Pending",
+        "ready": false,
+        "ip": null,
+        "node": "kubequest-control-plane",
+        "labels": {
+          "kq.stack": "probe"
+        },
+        "containers": [
+          {
+            "name": "kq-curl-mr3oo4by",
+            "image": "curlimages/curl:8.5.0"
+          }
+        ],
+        "restarts": 0,
+        "createdAt": "2026-07-02T15:52:48.000Z"
+      },
+      {
+        "name": "kq-curl-mr3oo4cr",
+        "phase": "Pending",
+        "ready": false,
+        "ip": null,
+        "node": "kubequest-control-plane",
+        "labels": {
+          "kq.stack": "probe"
+        },
+        "containers": [
+          {
+            "name": "kq-curl-mr3oo4cr",
+            "image": "curlimages/curl:8.5.0"
+          }
+        ],
+        "restarts": 0,
+        "createdAt": "2026-07-02T15:52:48.000Z"
       },
       {
         "name": "messenger",
@@ -646,16 +682,16 @@
       "track": "telemetry",
       "goal": "Prometheus has series for kq_http_requests_total.",
       "winHint": "prometheus query kq_http_requests_total returns series",
-      "met": false,
-      "detail": "metric kq_http_requests_total has no series yet — generate traffic"
+      "met": true,
+      "detail": "kq_http_requests_total: 1 series"
     }
   ],
   "telemetry": {
     "jaeger": {
       "ok": true,
       "services": [
-        "telemetry-api",
-        "jaeger-all-in-one"
+        "jaeger-all-in-one",
+        "telemetry-api"
       ]
     },
     "prometheus": {
@@ -670,136 +706,136 @@
   },
   "traces": [
     {
-      "traceID": "29070988d3f2e5bff65e0e1988205f5b",
+      "traceID": "0edbd6c4bc6e779185bdec6e49572ae1",
       "spans": 1,
       "rootOperation": "GET",
-      "durationUs": 37262,
+      "durationUs": 19777,
       "services": [
         "telemetry-api"
       ]
     },
     {
-      "traceID": "297b076a66fc00b33ed2c8e284bbbbb9",
+      "traceID": "251c9e784810255a8c95f9c386c5b884",
       "spans": 1,
       "rootOperation": "GET",
-      "durationUs": 28634,
+      "durationUs": 7673,
       "services": [
         "telemetry-api"
       ]
     },
     {
-      "traceID": "05e1f9bec8bad8fdb0c5f8fbaf70f7ae",
+      "traceID": "27102e8ca62aa58929db85510b4c6d09",
       "spans": 1,
       "rootOperation": "GET",
-      "durationUs": 1271,
+      "durationUs": 2892,
       "services": [
         "telemetry-api"
       ]
     },
     {
-      "traceID": "9fdcdb963ce8180dc91c36d44256fd6f",
+      "traceID": "bf7943ca2241f1458a2b0a2e8deb2c4b",
       "spans": 1,
       "rootOperation": "GET",
-      "durationUs": 10047,
+      "durationUs": 40752,
       "services": [
         "telemetry-api"
       ]
     },
     {
-      "traceID": "6a5e5620d18e3c6e0dba856c5ec47505",
-      "spans": 1,
+      "traceID": "9c4a8481211d7e90642cf7b2811ae188",
+      "spans": 3,
       "rootOperation": "GET",
-      "durationUs": 7106,
+      "durationUs": 72426,
       "services": [
         "telemetry-api"
       ]
     },
     {
-      "traceID": "7cc01c78967bda0983cdced290c8a90a",
+      "traceID": "ae61ff2af77eda75781fd442976bbc30",
       "spans": 1,
       "rootOperation": "GET",
-      "durationUs": 17718,
+      "durationUs": 1126,
       "services": [
         "telemetry-api"
       ]
     },
     {
-      "traceID": "dc1faadd5909014f640e93c28800d56a",
+      "traceID": "80d2bdc57a7946980287e1f00abbd0e4",
       "spans": 1,
       "rootOperation": "GET",
-      "durationUs": 1580,
+      "durationUs": 23553,
       "services": [
         "telemetry-api"
       ]
     },
     {
-      "traceID": "e93085f1e34bca972702e25a50cbed29",
+      "traceID": "90287e52d22c27a4e4171e21dc8c23d5",
       "spans": 1,
       "rootOperation": "GET",
-      "durationUs": 18852,
+      "durationUs": 6765,
       "services": [
         "telemetry-api"
       ]
     },
     {
-      "traceID": "fec15566eaafffb294f18301011fbefe",
+      "traceID": "d3cb4936142f355ce5bb2644c0c79462",
       "spans": 1,
       "rootOperation": "GET",
-      "durationUs": 48805,
+      "durationUs": 711,
       "services": [
         "telemetry-api"
       ]
     },
     {
-      "traceID": "5fb730d5684698eb84c0fd667bf5372e",
+      "traceID": "f18dea9e8342a2907cb68e1c433ce379",
       "spans": 1,
       "rootOperation": "GET",
-      "durationUs": 1617,
+      "durationUs": 918,
       "services": [
         "telemetry-api"
       ]
     },
     {
-      "traceID": "3a5bb4cdbae5eeeb0ca64918449327e5",
+      "traceID": "7f038789a8adb8f80647f1a33a449529",
       "spans": 1,
       "rootOperation": "GET",
-      "durationUs": 3599,
+      "durationUs": 1348,
       "services": [
         "telemetry-api"
       ]
     },
     {
-      "traceID": "684e5389a162bbae94e630bbe4f5d3a2",
+      "traceID": "01770fae105222978612492e836e022a",
       "spans": 1,
       "rootOperation": "GET",
-      "durationUs": 2527,
+      "durationUs": 2262,
       "services": [
         "telemetry-api"
       ]
     },
     {
-      "traceID": "661568e3181dd575a46187b47640db94",
+      "traceID": "eb5e6963d0a191b74ed548ea23a0837b",
       "spans": 1,
       "rootOperation": "GET",
-      "durationUs": 9193,
+      "durationUs": 1522,
       "services": [
         "telemetry-api"
       ]
     },
     {
-      "traceID": "c1f7e1fa7a71f68aac98622e0fc8ffb2",
+      "traceID": "4b8f3d50d8ea67776b0e4df017603f49",
       "spans": 1,
       "rootOperation": "GET",
-      "durationUs": 2823,
+      "durationUs": 1183,
       "services": [
         "telemetry-api"
       ]
     },
     {
-      "traceID": "f2de9ccfeffd05e1d699e197d1e33bd1",
+      "traceID": "d42f4b6ba24af308464068600a3217dc",
       "spans": 1,
       "rootOperation": "GET",
-      "durationUs": 2666,
+      "durationUs": 6252,
       "services": [
         "telemetry-api"
       ]
@@ -809,7 +845,37 @@
     "status": "success",
     "data": {
       "resultType": "vector",
-      "result": []
+      "result": [
+        {
+          "metric": {
+            "__name__": "kq_http_requests_total",
+            "exported_job": "telemetry-api",
+            "host_arch": "amd64",
+            "host_name": "telemetry-api-657474d76b-hd2wx",
+            "instance": "otel-collector:8889",
+            "job": "otel-collector",
+            "process_command": "/app/server.js",
+            "process_command_args": "[\"/usr/local/bin/node\",\"--require\",\"./otel.cjs\",\"/app/server.js\"]",
+            "process_executable_name": "node",
+            "process_executable_path": "/usr/local/bin/node",
+            "process_owner": "root",
+            "process_pid": "24",
+            "process_runtime_description": "Node.js",
+            "process_runtime_name": "nodejs",
+            "process_runtime_version": "20.20.2",
+            "route": "/api/hello",
+            "service_name": "telemetry-api",
+            "status": "200",
+            "telemetry_sdk_language": "nodejs",
+            "telemetry_sdk_name": "opentelemetry",
+            "telemetry_sdk_version": "1.30.1"
+          },
+          "value": [
+            1783007569.024,
+            "1"
+          ]
+        }
+      ]
     }
   }
 }
