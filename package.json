@@ -1,0 +1,21 @@
+{
+  "name": "kubequest",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Learn Kubernetes in the terminal by typing real kubectl commands",
+  "scripts": {
+    "setup": "bash scripts/setup-cluster.sh",
+    "dev": "node game.mjs",
+    "install:all": "npm install --prefix server && npm install --prefix client",
+    "reset": "bash scripts/reset-game.sh",
+    "start": "node game.mjs",
+    "play": "node game.mjs",
+    "audit": "node scripts/e2e-audit.mjs"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  },
+  "dependencies": {
+    "chalk": "^4.1.2"
+  }
+}

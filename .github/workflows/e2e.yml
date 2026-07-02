@@ -1,0 +1,80 @@
+name: e2e
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: e2e-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  k8s-game-e2e:
+    name: kind + mission audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            server/package-lock.json
+
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v4
+        with:
+          version: v1.32.2
+
+      - name: Install kind
+        run: |
+          set -euo pipefail
+          curl -fsSL -o ./kind "https://kind.sigs.k8s.io/dl/v0.27.0/kind-linux-amd64"
+          chmod +x ./kind
+          sudo mv ./kind /usr/local/bin/kind
+          kind version
+          kubectl version --client
+
+      - name: Create kind cluster
+        run: |
+          set -euo pipefail
+          kind create cluster --name kubequest --wait 120s
+          kubectl cluster-info
+          kubectl get nodes
+          kubectl create namespace kubequest
+          kubectl label namespace kubequest app=kubequest --overwrite
+
+      - name: Install dependencies
+        run: |
+          npm ci
+          npm ci --prefix server
+
+      - name: Run e2e mission audit
+        run: npm run audit
+
+      - name: Cluster dump on failure
+        if: failure()
+        run: |
+          kubectl get all,cm -n kubequest -o wide || true
+          kubectl describe pods -n kubequest || true
+          kind export logs ./kind-logs --name kubequest || true
+
+      - name: Upload kind logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kind-logs
+          path: kind-logs/
+          if-no-files-found: ignore
+
+      - name: Delete kind cluster
+        if: always()
+        run: kind delete cluster --name kubequest || true
